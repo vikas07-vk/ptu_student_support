@@ -1,0 +1,699 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Profile Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card profile-card h-100">
+                <div class="card-header profile-header">
+                    <h4 class="mb-0"><i class="bi bi-person-circle me-2"></i>Profile Information</h4>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <div class="profile-photo-container text-center">
+                        <div class="profile-photo-wrapper">
+                            <img src="{{ current_user.get_profile_photo_url() or 'https://ui-avatars.com/api/?name=' + current_user.username + '&background=random' }}" alt="Profile Photo" class="profile-photo" id="profile-photo">
+                            <label for="profile-photo-upload" class="photo-upload-label">
+                                <i class="bi bi-plus-circle-fill"></i>
+                            </label>
+                            <input type="file" id="profile-photo-upload" class="d-none" accept="image/*">
+                        </div>
+                        <h4 class="mt-2 user-name">{{ current_user.full_name }}</h4>
+                        <div class="user-status">
+                            <i class="bi bi-shield-check"></i>
+                            Active Student
+                        </div>
+                        <div class="username-display">
+                            <i class="bi bi-person-badge"></i>
+                            {{ current_user.username }}
+                        </div>
+                        <p class="text-muted user-course mb-2">{{ current_user.course }} - Semester {{ current_user.semester }}</p>
+                    </div>
+                    
+                    <div class="profile-info">
+                        <div class="info-section">
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="bi bi-envelope-fill"></i>
+                                </div>
+                                <div class="info-content">
+                                    <div class="info-label">Email</div>
+                                    <div class="info-value">{{ current_user.email }}</div>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="bi bi-123"></i>
+                                </div>
+                                <div class="info-content">
+                                    <div class="info-label">Roll No.</div>
+                                    <div class="info-value">{{ current_user.enrollment_number }}</div>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="bi bi-mortarboard-fill"></i>
+                                </div>
+                                <div class="info-content">
+                                    <div class="info-label">Branch</div>
+                                    <div class="info-value">{{ current_user.course }}</div>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="bi bi-calendar-check"></i>
+                                </div>
+                                <div class="info-content">
+                                    <div class="info-label">Joined</div>
+                                    <div class="info-value">{{ current_user.created_at.strftime('%b %Y') }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-actions">
+                        <a href="{{ url_for('profile') }}" class="btn btn-primary edit-profile-btn w-100">
+                            <i class="bi bi-pencil-square me-2"></i>Edit Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="col-md-8">
+            <div class="quick-actions-section">
+                <h2 class="section-title"><i class="bi bi-lightning-charge-fill"></i> Quick Actions</h2>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <a href="{{ url_for('static', filename='timetable.pdf') }}" class="quick-action-card" target="_blank">
+                            <div class="card-content">
+                                <i class="bi bi-calendar3"></i>
+                                <span>Time Table</span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="https://www.ptuexam.com/" class="quick-action-card" target="_blank">
+                            <div class="card-content">
+                                <i class="bi bi-graph-up"></i>
+                                <span>View Results</span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{{ url_for('course_materials') }}" class="quick-action-card">
+                            <div class="card-content">
+                                <i class="bi bi-book"></i>
+                                <span>Course Materials</span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{{ url_for('static', filename='syllabus.pdf') }}" class="quick-action-card" target="_blank">
+                            <div class="card-content">
+                                <i class="bi bi-journal-text"></i>
+                                <span>Syllabus</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="bi bi-bell"></i> Recent Notifications</h4>
+                </div>
+                <div class="card-body">
+                    <div class="notices-container" id="noticesContainer">
+                        {% if notices %}
+                            {% for notice in notices %}
+                            <div class="notice-item {% if loop.index > 4 %}hidden-notice{% endif %}">
+                                <div class="notice-content">
+                                    <a href="{{ notice.link }}" target="_blank" class="notice-title">{{ notice.title }}</a>
+                                    <div class="notice-date">
+                                        <i class="far fa-calendar-alt me-1"></i>
+                                        {{ notice.date_posted.strftime('%d %B, %Y') }}
+                                    </div>
+                                </div>
+                                <a href="{{ notice.link }}" target="_blank" class="notice-link">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+                            {% endfor %}
+                            {% if notices|length > 4 %}
+                            <div class="text-center mt-3">
+                                <button class="btn btn-outline-primary show-more-btn" onclick="showMoreNotices()">
+                                    <i class="fas fa-chevron-down"></i> Show More
+                                </button>
+                            </div>
+                            {% endif %}
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-info-circle text-muted mb-2" style="font-size: 2rem;"></i>
+                                <p class="text-muted mb-0">No notices available at the moment.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-card {
+        border: none;
+        border-radius: 15px;
+        background: #fff;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        height: 100%;
+        max-height: 720px;
+    }
+
+    .profile-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 1.50rem;
+        position: relative;
+    }
+
+    .profile-header h4 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        
+    }
+
+    .profile-photo-container {
+        padding: 1.25rem 1rem 0.75rem;
+        position: relative;
+    }
+
+    .profile-photo-wrapper {
+        position: relative;
+        display: inline-block;
+        padding: 3px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-radius: 50%;
+    }
+
+    .profile-photo {
+        width: 105px;
+        height: 105px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid white;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .photo-upload-label {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background: var(--secondary-color);
+        color: white;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .photo-upload-label:hover {
+        transform: scale(1.1);
+        background: var(--primary-color);
+    }
+
+    .username-display {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 0.85rem;
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        background: rgba(59, 138, 196, 0.08);
+        color: #3B8AC4;
+        border-radius: 20px;
+    }
+
+    .username-display i {
+        font-size: 1rem;
+    }
+
+    .user-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 0.85rem;
+        margin-top: 0.75rem;
+        font-size: 0.85rem;
+        background: rgba(25, 135, 84, 0.08);
+        color: #198754;
+        border-radius: 20px;
+    }
+
+    .user-name {
+        font-size: 1.35rem;
+        margin: 0.6rem 0 0.3rem;
+        font-weight: 600;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: inline-block;
+    }
+
+    .user-course {
+        font-size: 0.92rem;
+        color: #666;
+        margin: 0.75rem 0;
+    }
+
+    .profile-info {
+        padding: 0 0.85rem;
+    }
+
+    .info-section {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.85rem;
+        margin-top: 0.5rem;
+    }
+
+    .info-item {
+        padding: 0.7rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.6rem;
+    }
+
+    .info-item:hover {
+        background: white;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+    }
+
+    .info-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        color: var(--primary-color);
+        font-size: 1.1rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .info-content {
+        flex: 1;
+    }
+
+    .info-label {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        font-size: 0.98rem;
+        color: #2c3e50;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .profile-actions {
+        padding: 0.85rem;
+        margin-top: 0.6rem;
+    }
+
+    .edit-profile-btn {
+        padding: 0.9rem 1.75rem;
+        border-radius: 22px;
+        font-weight: 500;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .edit-profile-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(var(--primary-color-rgb), 0.3);
+    }
+
+    @media (max-width: 768px) {
+        .profile-card {
+            max-height: none;
+        }
+        
+        .info-section {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .quick-actions-section {
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        color: var(--primary-color);
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .section-title i {
+        color: var(--secondary-color);
+    }
+
+    .quick-action-card {
+        display: block;
+        text-decoration: none;
+        border-radius: 20px;
+        padding: 2rem;
+        color: white;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    .quick-action-card:nth-child(1), .col-md-6:nth-child(1) .quick-action-card {
+        background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+    }
+
+    .quick-action-card:nth-child(2), .col-md-6:nth-child(2) .quick-action-card {
+        background: linear-gradient(135deg, #4E54C8, #8F94FB);
+    }
+
+    .quick-action-card:nth-child(3), .col-md-6:nth-child(3) .quick-action-card {
+        background: linear-gradient(135deg, #11998e, #38ef7d);
+    }
+
+    .quick-action-card:nth-child(4), .col-md-6:nth-child(4) .quick-action-card {
+        background: linear-gradient(135deg, #FC466B, #3F5EFB);
+    }
+
+    .quick-action-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
+        transform: translateY(100%);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: -1;
+    }
+
+    .quick-action-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        color: white;
+    }
+
+    .quick-action-card:hover::before {
+        transform: translateY(0);
+    }
+
+    .card-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1rem;
+        position: relative;
+    }
+
+    .card-content i {
+        font-size: 2.5rem;
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card-content span {
+        font-size: 1.2rem;
+        font-weight: 600;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .quick-action-card:hover .card-content i {
+        transform: scale(1.2) rotate(5deg);
+    }
+
+    .quick-action-card:hover .card-content span {
+        transform: scale(1.05);
+    }
+
+    /* Add shimmer effect */
+    .quick-action-card::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+            45deg,
+            transparent,
+            rgba(255, 255, 255, 0.1),
+            transparent
+        );
+        transform: rotate(45deg);
+        animation: shimmer 3s infinite;
+        pointer-events: none;
+    }
+
+    @keyframes shimmer {
+        0% {
+            transform: translateX(-100%) rotate(45deg);
+        }
+        100% {
+            transform: translateX(100%) rotate(45deg);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .quick-actions-section {
+            padding: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+        }
+
+        .quick-action-card {
+            padding: 1.5rem;
+        }
+
+        .card-content i {
+            font-size: 2rem;
+        }
+
+        .card-content span {
+            font-size: 1.1rem;
+        }
+    }
+
+    /* Add floating animation to icons */
+    @keyframes floating {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    .card-content i {
+        animation: floating 3s ease-in-out infinite;
+    }
+
+    .notice-item {
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .notice-item:last-child {
+        border-bottom: none;
+    }
+
+    .notice-item:hover {
+        background-color: #f8f9fa;
+        transform: translateX(5px);
+    }
+
+    .notice-content {
+        flex: 1;
+    }
+
+    .notice-title {
+        color: #2c3e50;
+        font-weight: 500;
+        margin-bottom: 5px;
+        display: block;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .notice-title:hover {
+        color: #3498db;
+    }
+
+    .notice-date {
+        color: #95a5a6;
+        font-size: 0.9rem;
+    }
+
+    .notice-link {
+        color: #3498db;
+        text-decoration: none;
+        font-size: 0.9rem;
+        padding: 5px 10px;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+
+    .notice-link:hover {
+        background-color: #3498db;
+        color: white;
+    }
+
+    .notices-container {
+        max-height: 400px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #3498db #f8f9fa;
+    }
+
+    .notices-container::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .notices-container::-webkit-scrollbar-track {
+        background: #f8f9fa;
+        border-radius: 3px;
+    }
+
+    .notices-container::-webkit-scrollbar-thumb {
+        background-color: #3498db;
+        border-radius: 3px;
+    }
+
+    .notices-container::-webkit-scrollbar-thumb:hover {
+        background-color: #2980b9;
+    }
+
+    .hidden-notice {
+        display: none;
+    }
+
+    .show-more-btn {
+        border: none;
+        background: transparent;
+        color: var(--primary-color);
+        padding: 8px 16px;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    .show-more-btn:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .show-more-btn i {
+        transition: transform 0.3s ease;
+    }
+
+    .show-more-btn:hover i {
+        transform: translateY(2px);
+    }
+
+    /* Add this to ensure the gradient text works across browsers */
+    @supports not (background-clip: text) {
+        .user-name {
+            background: none;
+            color: var(--primary-color);
+        }
+    }
+</style>
+
+<script>
+    document.getElementById('profile-photo-upload').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('photo', file);
+            
+            // Show loading state
+            const photoElement = document.getElementById('profile-photo');
+            photoElement.style.opacity = '0.5';
+            
+            fetch('/upload_profile_photo', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update the profile photo with the new one
+                    photoElement.src = data.photo_url;
+                    photoElement.style.opacity = '1';
+                } else {
+                    alert('Failed to update profile photo: ' + (data.error || 'Unknown error'));
+                    photoElement.style.opacity = '1';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while updating the profile photo.');
+                photoElement.style.opacity = '1';
+            });
+        }
+    });
+
+    function showMoreNotices() {
+        const hiddenNotices = document.querySelectorAll('.hidden-notice');
+        const showMoreBtn = document.querySelector('.show-more-btn');
+        
+        hiddenNotices.forEach(notice => {
+            notice.style.display = 'flex';
+            notice.classList.remove('hidden-notice');
+        });
+        
+        if (showMoreBtn) {
+            showMoreBtn.style.display = 'none';
+        }
+    }
+</script>
+{% endblock %} 

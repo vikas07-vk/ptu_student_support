@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Support{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Create Support Ticket</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('dashboard.support') }}">
+                    <div class="mb-3">
+                        <label for="subject" class="form-label">Subject</label>
+                        <input type="text" class="form-control" id="subject" name="subject" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message</label>
+                        <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Submit Ticket</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Support Information</h5>
+            </div>
+            <div class="card-body">
+                <h6>How to get help:</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <i class="bi bi-chat-dots text-primary"></i>
+                        Use the chat bot for quick answers
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-ticket text-success"></i>
+                        Submit a support ticket for complex issues
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-clock text-warning"></i>
+                        Response time: 24-48 hours
+                    </li>
+                </ul>
+                <hr>
+                <h6>Contact Information:</h6>
+                <p class="mb-1">
+                    <i class="bi bi-envelope"></i>
+                    support@studentportal.com
+                </p>
+                <p class="mb-1">
+                    <i class="bi bi-telephone"></i>
+                    +1 234 567 890
+                </p>
+                <p class="mb-0">
+                    <i class="bi bi-clock"></i>
+                    Mon-Fri: 9:00 AM - 5:00 PM
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

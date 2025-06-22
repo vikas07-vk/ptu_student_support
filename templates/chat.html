@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTU Student Support</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="{{ url_for('static', filename='images/ptu-logo.png') }}">
+    <style>
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            height: 100vh;
+        }
+
+        .app-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px 0 !important;
+            background-color: #003366;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            color: white;
+            position: relative;
+            min-height: unset;
+        }
+
+        .logo {
+            height: 80px !important;
+            width: auto;
+            margin-right: 10px;
+            margin-top: 0 !important;
+        }
+        
+        .app-header h1 {
+            margin-top: 15px;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .chat-container {
+            height: 350px !important;
+            margin-bottom: 70px;
+            overflow-y: auto;
+            padding: 10px !important;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            min-height: 200px;
+            max-height: 400px;
+        }
+        
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+        
+        .user-message {
+            background-color: #fff;
+            color: #1976d2;
+            margin-left: auto;
+            border: 1px solid #1976d2;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .bot-message {
+            background-color: #e3f2fd;
+            color: #003366;
+            margin-right: auto;
+        }
+
+        .message-content {
+            margin-bottom: 4px;
+        }
+
+        .message-text {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #666;
+            text-align: right;
+        }
+        
+        .input-area {
+            position: static;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px 0 0 0 !important;
+            background-color: transparent;
+            box-shadow: none;
+        }
+        
+        .input-container {
+            display: flex;
+            align-items: center;
+            max-width: 600px !important;
+            margin: 0 auto;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            padding: 8px 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        #user-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: none;
+            padding: 8px;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        #user-input::placeholder {
+            color: #666;
+        }
+        
+        .voice-btn, .send-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1976d2;
+            transition: color 0.3s;
+            font-size: 20px;
+        }
+
+        .voice-btn:hover, .send-btn:hover {
+            color: #00509e;
+        }
+        
+        .voice-btn.active {
+            color: #1976d2;
+            background-color: #e3f2fd;
+        }
+
+        /* Top Buttons Container */
+        .top-buttons {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        /* Quick Links Button */
+        .quick-links-btn button {
+            padding: 8px 20px;
+            background-color: #ffc107;
+            color: #000;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .quick-links-btn button:hover {
+            background-color: #ffb300;
+            transform: translateY(-1px);
+        }
+
+        /* New Chat and History Buttons */
+        .new-chat-btn, .history-toggle-btn {
+            padding: 8px 15px;
+            background-color: #e3f2fd;
+            color: #003366;
+            border: 1px solid #1976d2;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .new-chat-btn:hover, .history-toggle-btn:hover {
+            background-color: #bbdefb;
+        }
+
+        /* Chat History Sidebar */
+        .chat-history-sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100vh;
+            background-color: #fff;
+            border-left: 1px solid #ddd;
+            transition: right 0.3s ease;
+            z-index: 1001;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        .chat-history-sidebar.active {
+            right: 0;
+        }
+
+        .history-header {
+            padding: 15px;
+            background-color: #003366;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .chat-history-list {
+            padding: 15px;
+            overflow-y: auto;
+            height: calc(100vh - 60px);
+        }
+
+        .chat-history-item {
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            background-color: #f8f9fa;
+            border: 1px solid #eee;
+            transition: background-color 0.3s;
+        }
+
+        .chat-history-item:hover {
+            background-color: #e9ecef;
+        }
+
+        .live-support-btn {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .live-support-btn button {
+            padding: 12px 24px;
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .live-support-btn button:hover {
+            background-color: #00509e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .live-support-btn i {
+            font-size: 20px;
+        }
+
+        /* Quick Links Styling */
+        .quick-links-sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background-color: white;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        .quick-links-sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            padding: 15px;
+            background-color: #003366;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-header h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .close-sidebar-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .categories {
+            padding: 20px;
+        }
+
+        .category {
+            margin-bottom: 20px;
+        }
+
+        .category h4 {
+            color: #800000;
+            margin-bottom: 10px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .category ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .category ul li {
+            margin-bottom: 8px;
+        }
+
+        .category ul li a {
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            padding: 8px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .category ul li a:hover {
+            background-color: #f8f9fa;
+            color: #800000;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            width: fit-content;
+        }
+        
+        .typing-indicator.active {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #666;
+            border-radius: 50%;
+            animation: typing 1s infinite ease-in-out;
+        }
+        
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Live Support Modal */
+        .live-support-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.35);
+            z-index: 2000;
+            backdrop-filter: blur(3px);
+            justify-content: center;
+            align-items: center;
+            transition: background 0.3s;
+        }
+        .live-support-modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            width: 95%;
+            max-width: 420px;
+            padding: 0;
+            animation: popIn 0.25s cubic-bezier(.4,2,.6,1) 1;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .modal-header {
+            background: linear-gradient(90deg, #1976d2 60%, #003366 100%);
+            padding: 18px 20px 14px 20px;
+            border-radius: 18px 18px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+        .modal-header h3 {
+            color: #fff;
+            font-size: 1.3rem;
+            margin: 0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .modal-logo {
+            height: 36px;
+            width: auto;
+        }
+        #close-modal {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.2s;
+            position: absolute;
+            right: 18px;
+            top: 16px;
+        }
+        #close-modal:hover {
+            color: #ffc107;
+        }
+        #support-form {
+            padding: 28px 28px 22px 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 18px;
+        }
+        .form-group {
+            margin-bottom: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .form-group label {
+            margin-bottom: 7px;
+            color: #003366;
+            font-weight: 500;
+            font-size: 15px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #1976d2;
+            border-radius: 7px;
+            font-size: 15px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #f7faff;
+            color: #222;
+            resize: none;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #003366;
+            box-shadow: 0 0 0 2px #1976d23a;
+            background: #fff;
+        }
+        .form-group textarea {
+            min-height: 90px;
+            max-height: 180px;
+            resize: vertical;
+        }
+        .submit-btn {
+            background: linear-gradient(90deg, #1976d2 60%, #003366 100%);
+            color: #fff;
+            border: none;
+            padding: 12px 0;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 1.08rem;
+            font-weight: 600;
+            margin-top: 8px;
+            box-shadow: 0 2px 8px rgba(25,118,210,0.08);
+            transition: background 0.2s, transform 0.1s;
+        }
+        .submit-btn:hover {
+            background: linear-gradient(90deg, #00509e 60%, #003366 100%);
+            transform: translateY(-1px) scale(1.03);
+        }
+
+        /* Quick Links and New Chat container */
+        .header-buttons {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Quick Links Button */
+        .quick-links-btn button {
+            padding: 8px 20px;
+            background-color: #ffc107;
+            color: #000;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .quick-links-btn button:hover {
+            background-color: #ffb300;
+            transform: translateY(-1px);
+        }
+
+        /* New Chat Button */
+        .new-chat-btn {
+            padding: 8px 15px;
+            background-color: white;
+            color: #000;
+            border: 1px solid #1976d2;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .new-chat-btn:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* History Button - Outside the box */
+        .history-toggle-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 8px 15px;
+            background-color: white;
+            color: #000;
+            border: 1px solid #1976d2;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .history-toggle-btn:hover {
+            background-color: #f8f9fa;
+        }
+
+        .history-date-header {
+            padding: 10px;
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #1976d2;
+            border-bottom: 1px solid #1976d2;
+            margin-top: 10px;
+            }
+
+        .chat-history-item {
+            padding: 12px;
+            border-radius: 5px;
+            margin: 8px;
+            cursor: pointer;
+            background-color: white;
+            border: 1px solid #1976d2;
+            transition: all 0.3s;
+            }
+
+        .chat-history-item:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+
+        .history-time {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+            }
+
+        .history-message {
+            font-size: 14px;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            }
+
+        .chat-history-list {
+            padding: 10px;
+            overflow-y: auto;
+            height: calc(100vh - 60px);
+            }
+
+        .chat-history-list::-webkit-scrollbar {
+            width: 6px;
+            }
+
+        .chat-history-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            }
+
+        .chat-history-list::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+            }
+
+        .chat-history-list::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <img src="{{ url_for('static', filename='images/ptu-logo.png') }}" alt="PTU Logo" class="logo">
+            <h1>IKGPTU STUDENT SUPPORT</h1>
+            <div class="header-buttons">
+                <div class="quick-links-btn">
+                    <button id="quick-links-toggle">
+                        <i class="fas fa-bolt"></i> Quick Links
+                    </button>
+                </div>
+                <button class="new-chat-btn" id="new-chat-btn">
+                    <i class="fas fa-plus"></i> New Chat
+                </button>
+            </div>
+        </header>
+
+        <button class="history-toggle-btn" id="history-toggle-btn">
+            <i class="fas fa-history"></i> History
+        </button>
+
+        <div class="chat-container" id="chat-container">
+            <div id="chat-messages" class="chat-messages"></div>
+            <div class="typing-indicator" id="typing-indicator">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <div class="input-container">
+                <button id="voice-btn" class="voice-btn" title="Voice Input">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <input type="text" id="user-input" placeholder="Type your question here..." autocomplete="off">
+                <button id="send-btn" class="send-btn" title="Send Message">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="live-support-btn">
+            <button id="live-support">
+                <i class="fas fa-headset"></i> Live Support
+            </button>
+        </div>
+    </div>
+
+    <div class="live-support-modal" id="live-support-modal">
+        <div class="modal-content">
+            <!-- Mini Navbar/Header for Modal -->
+            <div class="modal-navbar" style="display: flex; align-items: center; justify-content: center; gap: 12px; background: #003366; border-radius: 18px 18px 0 0; padding: 10px 0 7px 0;">
+                <img src="{{ url_for('static', filename='images/ptu-logo.png') }}" alt="PTU Logo" style="height: 38px; width: auto; margin-right: 6px;">
+                <span style="color: #fff; font-size: 1.15rem; font-weight: 600; letter-spacing: 1px;">IKGPTU STUDENT SUPPORT</span>
+            </div>
+            <div class="modal-header">
+                <h3>
+                    <img src="{{ url_for('static', filename='images/ptu-logo.png') }}" alt="PTU Logo" class="modal-logo">
+                    IKGPTU Live Support
+                </h3>
+                <button id="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="support-form">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="query">Message</label>
+                    <textarea id="query" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Chat History Sidebar -->
+    <div class="chat-history-sidebar" id="chat-history-sidebar">
+        <div class="history-header">
+            <h3>Chat History</h3>
+            <button class="history-close-btn" id="history-close-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chat-history-list" id="chat-history-list">
+            <!-- Chat history items will be added here dynamically -->
+        </div>
+    </div>
+
+    <!-- Quick Links Sidebar -->
+    <div class="quick-links-sidebar" id="quick-links-sidebar">
+        <div class="sidebar-header">
+            <h3>Quick Links</h3>
+            <button class="close-sidebar-btn" id="close-sidebar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="categories">
+            <div class="category">
+                <h4><i class="fas fa-graduation-cap"></i> Admissions</h4>
+                <ul>
+                    <li><a href="#" class="quick-query" data-query="What is the admission process for B.Tech courses?">B.Tech Admission Process</a></li>
+                    <li><a href="#" class="quick-query" data-query="What are the eligibility criteria for MBA?">MBA Eligibility</a></li>
+                    <li><a href="#" class="quick-query" data-query="When do admissions start?">Admission Dates</a></li>
+                </ul>
+            </div>
+            <div class="category">
+                <h4><i class="fas fa-rupee-sign"></i> Fees</h4>
+                <ul>
+                    <li><a href="#" class="quick-query" data-query="What is the annual fee for B.Tech?">B.Tech Fees</a></li>
+                    <li><a href="#" class="quick-query" data-query="Are there scholarships available?">Scholarships</a></li>
+                    <li><a href="#" class="quick-query" data-query="What is the fee structure for MBA?">MBA Fees</a></li>
+                </ul>
+            </div>
+            <div class="category">
+                <h4><i class="fas fa-home"></i> Hostel</h4>
+                <ul>
+                    <li><a href="#" class="quick-query" data-query="What are the hostel facilities?">Hostel Facilities</a></li>
+                    <li><a href="#" class="quick-query" data-query="What are the hostel charges?">Hostel Fees</a></li>
+                    <li><a href="#" class="quick-query" data-query="How to apply for hostel?">Hostel Application</a></li>
+                </ul>
+            </div>
+            <div class="category">
+                <h4><i class="fas fa-book"></i> Academics</h4>
+                <ul>
+                    <li><a href="#" class="quick-query" data-query="What are the courses offered?">Available Courses</a></li>
+                    <li><a href="#" class="quick-query" data-query="What is the academic calendar?">Academic Calendar</a></li>
+                    <li><a href="#" class="quick-query" data-query="How to check results?">Results</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Voice Input Setup
+            const voiceBtn = document.getElementById('voice-btn');
+            const userInput = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+            let recognition = null;
+
+            if ('webkitSpeechRecognition' in window) {
+                recognition = new webkitSpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+
+                recognition.onstart = function() {
+                    voiceBtn.classList.add('active');
+                };
+
+                recognition.onend = function() {
+                    voiceBtn.classList.remove('active');
+                };
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    userInput.value = transcript;
+                    sendMessage();
+                };
+
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error:', event.error);
+                    voiceBtn.classList.remove('active');
+                };
+
+                voiceBtn.addEventListener('click', function() {
+                    if (recognition) {
+                        try {
+                            recognition.start();
+                        } catch (error) {
+                            console.error('Error starting speech recognition:', error);
+                        }
+                    }
+                });
+            } else {
+                voiceBtn.style.display = 'none';
+            }
+
+            // Send Message Function
+            window.sendMessage = function() {
+    const message = userInput.value.trim();
+    
+    if (message) {
+        // Add user message to chat
+                    addMessageToChat(message, 'user');
+                    userInput.value = '';
+                    
+                    // Show typing indicator
+                    const typingIndicator = document.getElementById('typing-indicator');
+                    if (typingIndicator) {
+                        typingIndicator.classList.add('active');
+                    }
+        
+        // Send message to server
+        fetch('/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: message })
+        })
+        .then(response => response.json())
+        .then(data => {
+                        // Hide typing indicator
+                        if (typingIndicator) {
+                            typingIndicator.classList.remove('active');
+                        }
+                        
+            // Add bot response to chat
+                        if (data.response) {
+                            addMessageToChat(data.response, 'bot');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        if (typingIndicator) {
+                            typingIndicator.classList.remove('active');
+                        }
+                        addMessageToChat('Sorry, there was an error processing your message.', 'bot');
+                    });
+                }
+            }
+
+            // Event Listeners for sending messages
+            sendBtn.addEventListener('click', sendMessage);
+
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            // Function to add messages to chat
+            function addMessageToChat(message, sender) {
+                const chatMessages = document.getElementById('chat-messages');
+                if (!chatMessages) return;
+
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}-message`;
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'message-content';
+                
+                const textDiv = document.createElement('div');
+                textDiv.className = 'message-text';
+                textDiv.textContent = message;
+                
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'message-time';
+                timeDiv.textContent = new Date().toLocaleTimeString();
+                
+                contentDiv.appendChild(textDiv);
+                messageDiv.appendChild(contentDiv);
+                messageDiv.appendChild(timeDiv);
+                
+                chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+            // Quick Links functionality
+            const quickLinksBtn = document.getElementById('quick-links-toggle');
+            const quickLinksSidebar = document.getElementById('quick-links-sidebar');
+            const closeSidebarBtn = document.getElementById('close-sidebar');
+            const quickQueryLinks = document.querySelectorAll('.quick-query');
+
+            // Toggle Quick Links sidebar
+            if (quickLinksBtn && quickLinksSidebar) {
+                quickLinksBtn.addEventListener('click', function() {
+                    quickLinksSidebar.classList.add('active');
+                });
+            }
+
+            // Close Quick Links sidebar
+            if (closeSidebarBtn && quickLinksSidebar) {
+                closeSidebarBtn.addEventListener('click', function() {
+                    quickLinksSidebar.classList.remove('active');
+                });
+            }
+
+            // Handle Quick Query clicks
+            quickQueryLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const query = this.getAttribute('data-query');
+                    const userInput = document.getElementById('user-input');
+                    
+                    if (userInput && query) {
+                        userInput.value = query;
+                        quickLinksSidebar.classList.remove('active');
+                        sendMessage();
+                    }
+                });
+            });
+
+            // Close sidebar when clicking outside
+            document.addEventListener('click', function(e) {
+                if (quickLinksSidebar && quickLinksSidebar.classList.contains('active')) {
+                    if (!quickLinksSidebar.contains(e.target) && e.target !== quickLinksBtn) {
+                        quickLinksSidebar.classList.remove('active');
+                    }
+                }
+                
+                // Close live support modal when clicking outside
+                if (liveSupportModal && liveSupportModal.classList.contains('active')) {
+                    if (!liveSupportModal.contains(e.target) && e.target !== liveSupportBtn) {
+                        liveSupportModal.classList.remove('active');
+                    }
+                }
+            });
+
+            // New Chat Button
+            const newChatBtn = document.getElementById('new-chat-btn');
+            if (newChatBtn) {
+                newChatBtn.addEventListener('click', function() {
+                    // Clear only the current chat messages
+                    const chatMessages = document.getElementById('chat-messages');
+                    if (chatMessages) {
+                        chatMessages.innerHTML = '';
+                    }
+                    
+                    // Don't clear the history, just show success
+                    alert('New chat started! Your chat history is still available.');
+                });
+            }
+
+            // History Toggle
+            const historyToggleBtn = document.getElementById('history-toggle-btn');
+            const historyCloseBtn = document.getElementById('history-close-btn');
+            const chatHistorySidebar = document.getElementById('chat-history-sidebar');
+
+            if (historyToggleBtn && chatHistorySidebar) {
+                historyToggleBtn.addEventListener('click', function() {
+                    chatHistorySidebar.classList.add('active');
+                    loadChatHistory();  // Load history when sidebar is opened
+                });
+            }
+
+            if (historyCloseBtn && chatHistorySidebar) {
+                historyCloseBtn.addEventListener('click', function() {
+                    chatHistorySidebar.classList.remove('active');
+                });
+            }
+
+            // Live Support
+            const liveSupportBtn = document.getElementById('live-support');
+            const liveSupportModal = document.getElementById('live-support-modal');
+            const closeModalBtn = document.getElementById('close-modal');
+            const supportForm = document.getElementById('support-form');
+
+            if (liveSupportBtn && liveSupportModal) {
+                liveSupportBtn.addEventListener('click', function() {
+                    liveSupportModal.classList.add('active');
+                });
+            }
+
+            if (closeModalBtn && liveSupportModal) {
+                closeModalBtn.addEventListener('click', function() {
+                    liveSupportModal.classList.remove('active');
+                });
+            }
+
+            // Live support form submission
+            document.getElementById('support-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    query: document.getElementById('query').value
+                };
+                
+                fetch('/live_support', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Your message has been sent successfully! We will contact you soon.');
+                        liveSupportModal.classList.remove('active');
+                        document.getElementById('support-form').reset();
+                    } else {
+                        alert('Error: ' + (data.message || 'Failed to send message. Please try again.'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                });
+            });
+
+            // Chat History functionality
+            function loadChatHistory() {
+                fetch('/get_chat_history')
+                    .then(response => response.json())
+                    .then(data => {
+                        const chatMessages = document.getElementById('chat-messages');
+                        const historyList = document.getElementById('chat-history-list');
+                        
+                        // Clear existing history
+                        historyList.innerHTML = '';
+                        
+                        // Group chats by date
+                        const chatsByDate = {};
+                        data.history.forEach(chat => {
+                            const date = chat.timestamp.split(' ')[0];
+                            if (!chatsByDate[date]) {
+                                chatsByDate[date] = [];
+                            }
+                            chatsByDate[date].push(chat);
+                        });
+                        
+                        // Add chats to history sidebar
+                        Object.keys(chatsByDate).reverse().forEach(date => {
+                            const dateHeader = document.createElement('div');
+                            dateHeader.className = 'history-date-header';
+                            dateHeader.textContent = formatDate(date);
+                            historyList.appendChild(dateHeader);
+                            
+                            chatsByDate[date].reverse().forEach(chat => {
+                                const historyItem = document.createElement('div');
+                                historyItem.className = 'chat-history-item';
+                                historyItem.innerHTML = `
+                                    <div class="history-time">${chat.timestamp.split(' ')[1]}</div>
+                                    <div class="history-message">${chat.user_message}</div>
+                                `;
+                                historyList.appendChild(historyItem);
+                                
+                                // Add click event to show the full conversation
+                                historyItem.addEventListener('click', () => {
+                                    chatMessages.innerHTML = '';
+                                    addMessageToChat(chat.user_message, 'user');
+                                    addMessageToChat(chat.bot_response, 'bot');
+                                });
+                            });
+                        });
+                    })
+                    .catch(error => console.error('Error loading chat history:', error));
+            }
+
+            function formatDate(dateStr) {
+                const date = new Date(dateStr);
+                const today = new Date();
+                const yesterday = new Date(today);
+                yesterday.setDate(yesterday.getDate() - 1);
+                
+                if (dateStr === today.toISOString().split('T')[0]) {
+                    return 'Today';
+                } else if (dateStr === yesterday.toISOString().split('T')[0]) {
+                    return 'Yesterday';
+                }
+                return date.toLocaleDateString();
+    }
+});
+</script>
+</body>
+</html> 

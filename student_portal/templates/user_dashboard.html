@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Welcome</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ user.full_name }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-person-circle fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Course</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ user.course }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-book fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Semester</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ user.semester }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-calendar3 fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Enrollment</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ user.enrollment_number }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-card-text fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-8 col-lg-7">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Recent Chat History</h6>
+            </div>
+            <div class="card-body">
+                {% if chat_history %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Message</th>
+                                <th>Response</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for chat in chat_history %}
+                            <tr>
+                                <td>{{ chat.message }}</td>
+                                <td>{{ chat.response }}</td>
+                                <td>{{ chat.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-center">No chat history available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Support Tickets</h6>
+            </div>
+            <div class="card-body">
+                {% if tickets %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ticket in tickets %}
+                            <tr>
+                                <td>{{ ticket.subject }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if ticket.status == 'resolved' else 'warning' }}">
+                                        {{ ticket.status }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-center">No support tickets available.</p>
+                {% endif %}
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('dashboard.support') }}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Create Ticket
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('dashboard.profile') }}" class="btn btn-primary btn-block">
+                            <i class="bi bi-person"></i> Update Profile
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <button class="btn btn-success btn-block" onclick="toggleChat()">
+                            <i class="bi bi-chat"></i> Ask Questions
+                        </button>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="#" class="btn btn-info btn-block" onclick="downloadTimetable()">
+                            <i class="bi bi-calendar"></i> Download Timetable
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="#" class="btn btn-warning btn-block" onclick="downloadSyllabus()">
+                            <i class="bi bi-file-text"></i> Download Syllabus
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function downloadTimetable() {
+    window.location.href = `/download/timetable/${encodeURIComponent('{{ user.course }}'.toLowerCase())}`;
+}
+
+function downloadSyllabus() {
+    window.location.href = `/download/syllabus/${encodeURIComponent('{{ user.course }}'.toLowerCase())}`;
+}
+</script>
+{% endblock %} 

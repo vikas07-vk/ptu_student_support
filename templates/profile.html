@@ -1,0 +1,683 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <!-- Profile Header -->
+    <div class="profile-header-section">
+        <div class="profile-cover">
+            <div class="profile-avatar-wrapper">
+                <div class="profile-avatar">
+                    {% if current_user.profile_photo %}
+                    <img src="{{ url_for('static', filename='profile_photos/' + current_user.profile_photo) }}" alt="Profile Photo" id="profileImage">
+                    {% else %}
+                    <img src="{{ url_for('static', filename='images/default-avatar.png') }}" alt="Default Profile" id="profileImage">
+                    {% endif %}
+                    <div class="avatar-overlay">
+                        <label for="photoUpload" class="upload-btn">
+                            <i class="bi bi-camera-fill"></i>
+                        </label>
+                        <input type="file" id="photoUpload" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+            </div>
+            <div class="profile-header-info">
+                <h1>{{ current_user.full_name }}</h1>
+                <p class="student-info">{{ current_user.course }} • Semester {{ current_user.semester }}</p>
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <i class="bi bi-calendar3"></i>
+                        <span>Joined {{ current_user.created_at.strftime('%B %Y') }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="bi bi-ticket-detailed"></i>
+                        <span>{{ current_user.tickets|length }} Tickets</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="bi bi-chat-dots"></i>
+                        <span>Active Now</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="profile-content">
+        <div class="profile-sections">
+            <!-- Left Section -->
+            <div class="profile-main">
+                <div class="profile-card">
+                    <div class="card-header">
+                        <h3><i class="bi bi-person-badge"></i> Profile Information</h3>
+                        <button class="edit-btn" onclick="toggleEdit()">
+                            <i class="bi bi-pencil-square"></i> Edit Profile
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" id="profileForm">
+                            <div class="form-group-wrapper">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="bi bi-person"></i>
+                                        Username
+                                    </label>
+                                    <input type="text" value="{{ current_user.username }}" class="form-control" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <i class="bi bi-envelope"></i>
+                                        Email
+                                    </label>
+                                    <input type="email" name="email" value="{{ current_user.email }}" class="form-control" required disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group-wrapper">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="bi bi-person-vcard"></i>
+                                        Full Name
+                                    </label>
+                                    <input type="text" name="full_name" value="{{ current_user.full_name }}" class="form-control" required disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <i class="bi bi-123"></i>
+                                        Enrollment Number
+                                    </label>
+                                    <input type="text" name="enrollment_number" value="{{ current_user.enrollment_number }}" class="form-control" required disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group-wrapper">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="bi bi-book"></i>
+                                        Course
+                                    </label>
+                                    <select name="course" class="form-control" disabled>
+                                        <option value="B.Tech" {% if current_user.course == 'B.Tech' %}selected{% endif %}>B.Tech</option>
+                                        <option value="M.Tech" {% if current_user.course == 'M.Tech' %}selected{% endif %}>M.Tech</option>
+                                        <option value="MCA" {% if current_user.course == 'MCA' %}selected{% endif %}>MCA</option>
+                                        <option value="BCA" {% if current_user.course == 'BCA' %}selected{% endif %}>BCA</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <i class="bi bi-calendar3"></i>
+                                        Semester
+                                    </label>
+                                    <select name="semester" class="form-control" disabled>
+                                        {% for i in range(1, 9) %}
+                                        <option value="{{ i }}" {% if current_user.semester == i|string %}selected{% endif %}>Semester {{ i }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>
+                                    <i class="bi bi-key"></i>
+                                    New Password
+                                </label>
+                                <div class="password-input">
+                                    <input type="password" name="new_password" class="form-control" placeholder="Leave blank to keep current password" disabled>
+                                    <button type="button" class="toggle-password" onclick="togglePassword(this)">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-actions" style="display: none;">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-lg"></i> Save Changes
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="cancelEdit()">
+                                    <i class="bi bi-x-lg"></i> Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Section -->
+            <div class="profile-sidebar">
+                <!-- Quick Stats -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <h3><i class="bi bi-graph-up"></i> Quick Stats</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="quick-stats">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="bi bi-ticket-perforated"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h4>{{ current_user.tickets|length }}</h4>
+                                    <p>Support Tickets</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="bi bi-chat-left-dots"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h4>Active</h4>
+                                    <p>Chat Status</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <h3><i class="bi bi-activity"></i> Recent Activity</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-icon">
+                                    <i class="bi bi-person-check"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h4>Profile Updated</h4>
+                                    <p>You updated your profile information</p>
+                                    <span class="timeline-date">2 days ago</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-icon">
+                                    <i class="bi bi-ticket"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h4>Ticket Created</h4>
+                                    <p>You created a new support ticket</p>
+                                    <span class="timeline-date">5 days ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Security -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <h3><i class="bi bi-shield-lock"></i> Account Security</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="security-items">
+                            <div class="security-item">
+                                <i class="bi bi-shield-check"></i>
+                                <span>Password Protection</span>
+                                <span class="security-status secure">Secure</span>
+                            </div>
+                            <div class="security-item">
+                                <i class="bi bi-envelope-check"></i>
+                                <span>Email Verification</span>
+                                <span class="security-status verified">Verified</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.profile-header-section {
+    margin-bottom: 2rem;
+}
+
+.profile-cover {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-radius: 20px;
+    padding: 2rem;
+    color: white;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.profile-avatar-wrapper {
+    position: relative;
+}
+
+.profile-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 4px solid rgba(255,255,255,0.3);
+    overflow: hidden;
+    position: relative;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.5);
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.profile-avatar:hover .avatar-overlay {
+    opacity: 1;
+}
+
+.upload-btn {
+    color: white;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.profile-header-info {
+    flex: 1;
+}
+
+.profile-header-info h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.student-info {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 1rem;
+}
+
+.profile-stats {
+    display: flex;
+    gap: 2rem;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.stat-item i {
+    font-size: 1.2rem;
+}
+
+.profile-sections {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+}
+
+.profile-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+}
+
+.profile-card .card-header {
+    background: white;
+    padding: 1.5rem;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.edit-btn {
+    background: none;
+    border: none;
+    color: var(--secondary-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+    background: rgba(59, 138, 196, 0.1);
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.form-group-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:disabled {
+    background: #f8f9fa;
+    cursor: not-allowed;
+}
+
+.form-control:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(59, 138, 196, 0.1);
+}
+
+.password-input {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-color);
+}
+
+.btn-secondary {
+    background: #f8f9fa;
+    color: #666;
+}
+
+.btn-secondary:hover {
+    background: #e9ecef;
+}
+
+.quick-stats {
+    display: grid;
+    gap: 1rem;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.stat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--secondary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.stat-info h4 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+.stat-info p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.activity-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.timeline-item {
+    display: flex;
+    gap: 1rem;
+    position: relative;
+}
+
+.timeline-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: rgba(59, 138, 196, 0.1);
+    color: var(--secondary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.timeline-content h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--primary-color);
+}
+
+.timeline-content p {
+    margin: 0.2rem 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.timeline-date {
+    font-size: 0.8rem;
+    color: #999;
+}
+
+.security-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.security-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.security-item i {
+    color: var(--secondary-color);
+}
+
+.security-status {
+    margin-left: auto;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+}
+
+.security-status.secure {
+    background: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+}
+
+.security-status.verified {
+    background: rgba(52, 152, 219, 0.1);
+    color: #3498db;
+}
+
+@media (max-width: 768px) {
+    .profile-sections {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-cover {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.5rem;
+    }
+
+    .profile-stats {
+        justify-content: center;
+    }
+
+    .form-group-wrapper {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+function toggleEdit() {
+    const form = document.getElementById('profileForm');
+    const inputs = form.querySelectorAll('input:not([readonly]), select');
+    const actions = form.querySelector('.form-actions');
+    
+    inputs.forEach(input => {
+        input.disabled = !input.disabled;
+    });
+    
+    actions.style.display = actions.style.display === 'none' ? 'flex' : 'none';
+}
+
+function cancelEdit() {
+    const form = document.getElementById('profileForm');
+    const inputs = form.querySelectorAll('input:not([readonly]), select');
+    const actions = form.querySelector('.form-actions');
+    
+    inputs.forEach(input => {
+        input.disabled = true;
+        input.value = input.defaultValue;
+    });
+    
+    actions.style.display = 'none';
+}
+
+function togglePassword(button) {
+    const input = button.parentElement.querySelector('input');
+    const icon = button.querySelector('i');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('bi-eye');
+        icon.classList.add('bi-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('bi-eye-slash');
+        icon.classList.add('bi-eye');
+    }
+}
+
+// Profile photo upload
+document.getElementById('photoUpload').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const formData = new FormData();
+        formData.append('photo', file);
+        
+        fetch('/upload_profile_photo', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('profileImage').src = data.photo_url;
+                // Optionally show success message
+            } else {
+                alert('Error uploading photo: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error uploading photo');
+        });
+    }
+});
+</script>
+{% endblock %} 

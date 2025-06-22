@@ -1,0 +1,332 @@
+{% extends "base.html" %}
+{% block title %}FAQs - IKGPTU Student Support{% endblock %}
+{% block content %}
+<style>
+    .faqs-hero {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        background: linear-gradient(90deg, #1976d2 60%, #003366 100%);
+        color: #fff;
+        border-radius: 18px 18px 0 0;
+        padding: 28px 32px 22px 32px;
+        margin-bottom: 0;
+        box-shadow: 0 4px 18px rgba(25, 118, 210, 0.08);
+    }
+    .faqs-hero .faqs-icon {
+        font-size: 2.5rem;
+        background: #fff;
+        color: #1976d2;
+        border-radius: 50%;
+        padding: 10px 16px;
+        box-shadow: 0 2px 8px rgba(25, 118, 210, 0.10);
+    }
+    .faqs-card {
+        background: #fff;
+        border-radius: 0 0 18px 18px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        padding: 32px 24px 24px 24px;
+        margin-top: 0;
+        margin-bottom: 32px;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .accordion-button {
+        font-size: 1.08rem;
+        font-weight: 500;
+        color: #1976d2;
+        background: #f7faff;
+        border-radius: 8px !important;
+        margin-bottom: 4px;
+        transition: background 0.2s, color 0.2s;
+    }
+    .accordion-button:not(.collapsed) {
+        background: #e3f2fd;
+        color: #003366;
+        box-shadow: 0 2px 8px rgba(25, 118, 210, 0.06);
+    }
+    .accordion-item {
+        border: none;
+        margin-bottom: 10px;
+    }
+    .accordion-body {
+        background: #f8f9fa;
+        border-radius: 0 0 8px 8px;
+        font-size: 1rem;
+        color: #222;
+        padding: 18px 22px;
+    }
+    @media (max-width: 600px) {
+        .faqs-hero, .faqs-card {
+            padding: 18px 6px 12px 6px;
+        }
+        .faqs-card {
+            padding: 18px 4px 12px 4px;
+        }
+    }
+</style>
+<div class="container py-4">
+    <div class="faqs-hero mb-0">
+        <span class="faqs-icon"><i class="bi bi-question-circle"></i></span>
+        <div>
+            <h2 class="mb-1" style="font-weight: 700; letter-spacing: 1px;">Frequently Asked Questions (FAQs)</h2>
+            <div style="font-size: 1.1rem; opacity: 0.92;">Find answers to common queries about admissions, counselling, eligibility, and more at IKGPTU.</div>
+        </div>
+    </div>
+    <div class="faqs-card">
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item mb-2">
+                <h6 class="accordion-header" id="faq1">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
+                        What is Centralized Online Counselling?
+                    </button>
+                </h6>
+                <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="faq1" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Through Centralized Online Counselling, candidates can get admission in the Constituent Campuses/Affiliated Colleges of participating Universities according to their choice on the basis of their Rank/Merit by participating online. All activities are done online through the web module.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item mb-2">
+                <h6 class="accordion-header" id="faq2">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                        For which courses is Centralized Online Counselling conducted?
+                    </button>
+                </h6>
+                <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="faq2" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <ul>
+                            <li>B.Tech. (1st Year & Lateral Entry): Inter-se-merit of qualifying examination</li>
+                            <li>B.Pharmacy: Inter-se-merit of qualifying examination</li>
+                            <li>B.Arch.: Valid NATA Scores + 50:50 ratio of Qualifying Examination</li>
+                            <li>MBA: CMAT & Inter-se-merit of Qualifying Examination</li>
+                            <li>MCA: Inter-se-merit of Qualifying Examination</li>
+                            <li>M.Tech.: Valid GATE Scores & Inter-se-merit of B.Tech. or equivalent exam</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item mb-2">
+                <h6 class="accordion-header" id="faq3">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                        Do I need to pay the counselling fee twice for both rounds?
+                    </button>
+                </h6>
+                <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="faq3" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        No. This is a one-time payment to participate in all rounds of Centralized Online Counselling.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item mb-2">
+                <h6 class="accordion-header" id="faq4">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
+                        Can I participate in both rounds of Centralized Online Counselling?
+                    </button>
+                </h6>
+                <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="faq4" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Yes, you can participate in both rounds. If you get a seat in the 1st round and are not satisfied, you may participate in the 2nd round.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item mb-2">
+                <h6 class="accordion-header" id="faq5">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
+                        What documents are required at the time of admission?
+                    </button>
+                </h6>
+                <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="faq5" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <ul>
+                            <li>10th & 12th DMC</li>
+                            <li>Diploma DMCs (for Lateral Entry)</li>
+                            <li>Graduation Degree (for PG courses)</li>
+                            <li>Residential Certificate</li>
+                            <li>Reserved Category Certificate (if applicable)</li>
+                            <li>Passport Size Photograph</li>
+                            <li>Migration Certificate</li>
+                            <li>Aadhaar Card</li>
+                            <li>Income Certificate (if applicable)</li>
+                            <li>Entrance Exam Score Card (if applicable)</li>
+                            <li>Centralized Online Counselling Registration Form</li>
+                            <li>Allotment Letter</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item mb-2">
+                <h6 class="accordion-header" id="faq6">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
+                        What is the Tuition Fee Waiver Scheme?
+                    </button>
+                </h6>
+                <div id="collapse6" class="accordion-collapse collapse" aria-labelledby="faq6" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        It is applicable for Economically Weaker Candidates from Punjab State with annual family income less than 8 Lakhs. For details, check notifications related to TFW Scheme on the IKGPTU website.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item mb-2">
+                <h6 class="accordion-header" id="faq7">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse7" aria-expanded="false" aria-controls="collapse7">
+                        Can I apply for both 85% (Punjab Resident Quota) & 15% (Outside Punjab Quota)?
+                    </button>
+                </h6>
+                <div id="collapse7" class="accordion-collapse collapse" aria-labelledby="faq7" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        No. The candidate can participate under one quota only, either 85% or 15%, as per their state of eligibility.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item mb-2">
+                <h6 class="accordion-header" id="faq8">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse8" aria-expanded="false" aria-controls="collapse8">
+                        I have a compartment/reappear in qualifying exam. Am I eligible for counselling?
+                    </button>
+                </h6>
+                <div id="collapse8" class="accordion-collapse collapse" aria-labelledby="faq8" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        No. Such candidates are not eligible to participate in Centralized Online Counselling.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item mb-2">
+                <h6 class="accordion-header" id="faq9">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse9" aria-expanded="false" aria-controls="collapse9">
+                        How do I contact the university for official matters?
+                    </button>
+                </h6>
+                <div id="collapse9" class="accordion-collapse collapse" aria-labelledby="faq9" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <strong>Registrar Email:</strong> registrar@ptu.ac.in<br>
+                        <strong>Phone:</strong> +91-1822-282533, 282535, 282583<br>
+                        <strong>Student Enquiry:</strong> 01822-282531 (9:30AM To 4:30 PM)
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item mb-2">
+                <h6 class="accordion-header" id="faq10">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse10" aria-expanded="false" aria-controls="collapse10">
+                        How can I check my admission status?
+                    </button>
+                </h6>
+                <div id="collapse10" class="accordion-collapse collapse" aria-labelledby="faq10" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        You can check your admission status by logging into the Centralized Online Counselling portal using your credentials. Updates and seat allotment results are posted there.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item mb-2">
+                <h6 class="accordion-header" id="faq11">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse11" aria-expanded="false" aria-controls="collapse11">
+                        What is the process for document verification?
+                    </button>
+                </h6>
+                <div id="collapse11" class="accordion-collapse collapse" aria-labelledby="faq11" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Document verification is done at the time of reporting to the allotted institute. You must bring all original documents and their photocopies for verification.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item mb-2">
+                <h6 class="accordion-header" id="faq12">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse12" aria-expanded="false" aria-controls="collapse12">
+                        What if I miss the reporting date at the allotted institute?
+                    </button>
+                </h6>
+                <div id="collapse12" class="accordion-collapse collapse" aria-labelledby="faq12" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        If you do not report within the prescribed time, your allotted seat will be cancelled and offered in the next round of counselling.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item mb-2">
+                <h6 class="accordion-header" id="faq13">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse13" aria-expanded="false" aria-controls="collapse13">
+                        How do I apply for a scholarship?
+                    </button>
+                </h6>
+                <div id="collapse13" class="accordion-collapse collapse" aria-labelledby="faq13" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Visit the "Student Welfare" section and the IKGPTU Scholarship Portal on the official website for eligibility and application details.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item mb-2">
+                <h6 class="accordion-header" id="faq14">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse14" aria-expanded="false" aria-controls="collapse14">
+                        Can I edit or change my choices after submitting the counselling form?
+                    </button>
+                </h6>
+                <div id="collapse14" class="accordion-collapse collapse" aria-labelledby="faq14" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Yes, you can edit, delete, and rearrange your choices as many times as you want before the last date/time of choice filling.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item mb-2">
+                <h6 class="accordion-header" id="faq15">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse15" aria-expanded="false" aria-controls="collapse15">
+                        Is hostel accommodation available for students?
+                    </button>
+                </h6>
+                <div id="collapse15" class="accordion-collapse collapse" aria-labelledby="faq15" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Yes, hostel accommodation is available at the main campus and other constituent campuses. Details and application forms are available on the university website.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item mb-2">
+                <h6 class="accordion-header" id="faq16">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse16" aria-expanded="false" aria-controls="collapse16">
+                        How can I get my migration certificate?
+                    </button>
+                </h6>
+                <div id="collapse16" class="accordion-collapse collapse" aria-labelledby="faq16" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        You can apply for a migration certificate through the "Document Portal" under the "Examination" section on the IKGPTU website.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item mb-2">
+                <h6 class="accordion-header" id="faq17">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse17" aria-expanded="false" aria-controls="collapse17">
+                        What is the refund policy for admission/counselling fees?
+                    </button>
+                </h6>
+                <div id="collapse17" class="accordion-collapse collapse" aria-labelledby="faq17" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        The counselling fee is non-refundable. However, if you paid the fee twice due to a technical issue, you may submit a request to the Accounts Department with supporting documents.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item mb-2">
+                <h6 class="accordion-header" id="faq18">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse18" aria-expanded="false" aria-controls="collapse18">
+                        What are the eligibility criteria for B.Tech/MBA/MCA/M.Tech?
+                    </button>
+                </h6>
+                <div id="collapse18" class="accordion-collapse collapse" aria-labelledby="faq18" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Eligibility criteria for all courses are available on the <a href="https://ptu.ac.in/admission-2022-23/eligibility-criteria/" target="_blank">Eligibility Criteria page</a> of the IKGPTU website.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item mb-2">
+                <h6 class="accordion-header" id="faq19">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse19" aria-expanded="false" aria-controls="collapse19">
+                        How can I contact the admission helpdesk?
+                    </button>
+                </h6>
+                <div id="collapse19" class="accordion-collapse collapse" aria-labelledby="faq19" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        You can call the Student Enquiry number: 01822-282531 (9:30AM To 4:30 PM) or email the Registrar at registrar@ptu.ac.in.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

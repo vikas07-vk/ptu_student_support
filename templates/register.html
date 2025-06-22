@@ -1,0 +1,654 @@
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+    <div class="main-content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="welcome-section text-center mb-4">
+                        <div class="logo-wrapper">
+                            <img src="{{ url_for('static', filename='images/ptu-logo.png') }}" alt="PTU Logo" class="welcome-logo mb-3">
+                            <div class="logo-glow"></div>
+                        </div>
+                        <h2 class="welcome-title">Join PTU Student Support</h2>
+                        <p class="welcome-text">Create your account to access personalized academic support, instant query resolution, and stay updated with important announcements. Your academic journey starts here!</p>
+                    </div>
+                    <div class="card register-card">
+                        <div class="card-header">
+                            <h3 class="text-center mb-0"><i class="bi bi-person-plus"></i> Register</h3>
+                        </div>
+                        <div class="card-body">
+                            {% with messages = get_flashed_messages(with_categories=true) %}
+                                {% if messages %}
+                                    {% for category, message in messages %}
+                                        <div class="alert alert-{{ category }} alert-dismissible fade show error-message">
+                                            <div class="error-icon">
+                                                <i class="bi bi-exclamation-circle"></i>
+                                            </div>
+                                            <div class="error-text">{{ message }}</div>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+                            <div class="d-flex mb-4 justify-content-center align-items-center" style="gap: 1rem;">
+                                <button type="button" class="admission-toggle-btn active-new" id="btn-new" onclick="setAdmissionType('new')">
+                                    <i class="bi bi-person-plus"></i> New Admission
+                                </button>
+                                <button type="button" class="admission-toggle-btn" id="btn-existing" onclick="setAdmissionType('existing')">
+                                    <i class="bi bi-person-badge"></i> Existing Student
+                                </button>
+                                <input type="hidden" name="admission_type" id="admission_type" value="new">
+                            </div>
+                            <form method="POST" action="{{ url_for('register') }}" class="animated-form">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label for="username" class="form-label">
+                                                <i class="bi bi-person"></i> Username
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="username" name="username" required>
+                                                <span class="input-focus-effect"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label for="email" class="form-label">
+                                                <i class="bi bi-envelope"></i> Email
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="email" class="form-control" id="email" name="email" required>
+                                                <span class="input-focus-effect"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label for="password" class="form-label">
+                                                <i class="bi bi-lock"></i> Password
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="password" class="form-control" id="password" name="password" required>
+                                                <span class="input-focus-effect"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label for="full_name" class="form-label">
+                                                <i class="bi bi-person-badge"></i> Full Name
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="full_name" name="full_name" required>
+                                                <span class="input-focus-effect"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label for="course" class="form-label">
+                                                <i class="bi bi-book"></i> Course
+                                            </label>
+                                            <div class="input-group">
+                                                <select class="form-select" id="course" name="course" required>
+                                                    <option value="">Select Course</option>
+                                                    <option value="B.Tech">B.Tech</option>
+                                                    <option value="M.Tech">M.Tech</option>
+                                                    <option value="BCA">BCA</option>
+                                                    <option value="MCA">MCA</option>
+                                                </select>
+                                                <span class="input-focus-effect"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label for="semester" class="form-label">
+                                                <i class="bi bi-calendar"></i> Semester
+                                            </label>
+                                            <div class="input-group">
+                                                <select class="form-select" id="semester" name="semester" required>
+                                                    <option value="">Select Semester</option>
+                                                    {% for i in range(1, 9) %}
+                                                    <option value="{{ i }}">Semester {{ i }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <span class="input-focus-effect"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-4" id="enrollment-group" style="display:none;">
+                                    <label for="enrollment_number" class="form-label">
+                                        <i class="bi bi-123"></i> Enrollment Number
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="enrollment_number" name="enrollment_number">
+                                        <span class="input-focus-effect"></span>
+                                    </div>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-glow">
+                                        <i class="bi bi-person-plus"></i> Register
+                                        <span class="btn-effect"></span>
+                                    </button>
+                                </div>
+                            </form>
+                            <div class="text-center mt-4">
+                                <p class="login-text">Already have an account? <a href="{{ url_for('login') }}" class="text-decoration-none link-effect">Login</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'footer.html' %}
+</div>
+
+<style>
+    .page-wrapper {
+        min-height: unset;
+        padding: 10px 0;
+    }
+
+    .main-content {
+        padding: 1rem 0;
+    }
+
+    .register-card {
+        padding: 0.5rem 0.5rem;
+    }
+
+    .welcome-section {
+        margin-bottom: 1rem;
+    }
+
+    .animated-form .form-group {
+        margin-bottom: 0.8rem;
+    }
+
+    .d-grid {
+        margin-top: 1rem;
+    }
+
+    .logo-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .welcome-logo {
+        max-width: 120px;
+        height: auto;
+        margin-bottom: 1rem;
+        animation: fadeInDown 0.8s, floating 3s ease-in-out infinite;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .logo-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 140px;
+        height: 140px;
+        background: radial-gradient(circle, rgba(59, 138, 196, 0.2) 0%, rgba(59, 138, 196, 0) 70%);
+        border-radius: 50%;
+        animation: glowPulse 2s ease-in-out infinite;
+    }
+    
+    .welcome-title {
+        color: var(--primary-color);
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        animation: fadeInUp 0.8s;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .welcome-text {
+        color: #666;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+        animation: fadeInUp 0.8s 0.2s;
+        opacity: 0;
+        animation-fill-mode: forwards;
+    }
+
+    .register-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.95);
+        transform: translateY(0);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .register-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border-radius: 20px 20px 0 0 !important;
+        padding: 1.5rem;
+    }
+
+    .card-header h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .animated-form .form-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-control, .form-select {
+        border-radius: 12px;
+        padding: 0.8rem 1rem;
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 0.2rem rgba(59, 138, 196, 0.25);
+        transform: translateY(-2px);
+    }
+
+    .input-group {
+        position: relative;
+    }
+
+    .input-focus-effect {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--secondary-color);
+        transition: width 0.3s ease;
+    }
+
+    .form-control:focus + .input-focus-effect,
+    .form-select:focus + .input-focus-effect {
+        width: 100%;
+    }
+
+    .form-label {
+        color: var(--primary-color);
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .form-label i {
+        margin-right: 0.5rem;
+        transition: transform 0.3s ease;
+    }
+
+    .form-group:focus-within .form-label {
+        color: var(--secondary-color);
+        transform: translateY(-2px);
+    }
+
+    .form-group:focus-within .form-label i {
+        transform: scale(1.1);
+    }
+
+    .btn-glow {
+        position: relative;
+        padding: 1rem;
+        font-weight: 600;
+        border-radius: 12px;
+        border: none;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .btn-glow:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(59, 138, 196, 0.4);
+    }
+
+    .btn-effect {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transform: translateX(-100%);
+    }
+
+    .btn-glow:hover .btn-effect {
+        animation: btnEffect 1s infinite;
+    }
+
+    .login-text {
+        color: #666;
+        font-size: 1rem;
+    }
+
+    .link-effect {
+        color: var(--secondary-color);
+        font-weight: 500;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .link-effect::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        bottom: -2px;
+        left: 0;
+        background: var(--secondary-color);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.3s ease;
+    }
+
+    .link-effect:hover {
+        color: var(--primary-color);
+    }
+
+    .link-effect:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes floating {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    @keyframes glowPulse {
+        0%, 100% {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.5;
+        }
+        50% {
+            transform: translate(-50%, -50%) scale(1.2);
+            opacity: 0.8;
+        }
+    }
+
+    @keyframes btnEffect {
+        0% {
+            transform: translateX(-100%);
+        }
+        100% {
+            transform: translateX(100%);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .welcome-title {
+            font-size: 1.8rem;
+        }
+        
+        .welcome-text {
+            font-size: 1rem;
+        }
+        
+        .card-header {
+            padding: 1.2rem;
+        }
+        
+        .form-control, .form-select {
+            padding: 0.7rem;
+        }
+        
+        .btn-glow {
+            padding: 0.8rem;
+        }
+    }
+
+    /* Alert Styles */
+    .custom-alert {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        border: none;
+        border-radius: 12px;
+        background: white;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .alert-danger {
+        background: rgba(220, 53, 69, 0.1);
+        border-left: 4px solid #dc3545;
+    }
+
+    .alert-success {
+        background: rgba(25, 135, 84, 0.1);
+        border-left: 4px solid #198754;
+    }
+
+    .alert-warning {
+        background: rgba(255, 193, 7, 0.1);
+        border-left: 4px solid #ffc107;
+    }
+
+    .alert-info {
+        background: rgba(13, 202, 240, 0.1);
+        border-left: 4px solid #0dcaf0;
+    }
+
+    .alert-icon {
+        font-size: 1.5rem;
+        margin-right: 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .alert-danger .alert-icon {
+        color: #dc3545;
+    }
+
+    .alert-success .alert-icon {
+        color: #198754;
+    }
+
+    .alert-warning .alert-icon {
+        color: #ffc107;
+    }
+
+    .alert-info .alert-icon {
+        color: #0dcaf0;
+    }
+
+    .alert-content {
+        flex: 1;
+    }
+
+    .alert-text {
+        margin: 0;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #333;
+    }
+
+    .custom-close {
+        padding: 0.5rem;
+        margin: -0.5rem -0.5rem -0.5rem auto;
+        background: none;
+        border: none;
+        opacity: 0.5;
+        transition: opacity 0.3s ease;
+    }
+
+    .custom-close:hover {
+        opacity: 1;
+    }
+
+    .animate-alert {
+        animation: slideIn 0.3s ease-out forwards;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Alert shake animation for errors */
+    .alert-danger {
+        animation: slideIn 0.3s ease-out forwards, shake 0.5s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+        20%, 40%, 60%, 80% { transform: translateX(2px); }
+    }
+
+    /* Error Message Styling */
+    .error-message {
+        display: flex;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+        margin-bottom: 1.5rem;
+        animation: shake 0.5s ease-in-out;
+    }
+
+    .error-icon {
+        margin-right: 12px;
+        font-size: 1.2rem;
+        animation: pulse 2s infinite;
+    }
+
+    .error-text {
+        flex-grow: 1;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+    .btn-close {
+        opacity: 0.5;
+        transition: opacity 0.3s ease;
+    }
+
+    .btn-close:hover {
+        opacity: 1;
+    }
+
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.6; }
+        100% { opacity: 1; }
+    }
+
+    .admission-toggle-btn {
+        border: 2px solid #1b6ec2;
+        background: #fff;
+        color: #1b6ec2;
+        font-weight: 500;
+        border-radius: 14px;
+        padding: 0.7rem 2rem;
+        font-size: 1.1rem;
+        transition: all 0.2s;
+        outline: none;
+        box-shadow: none;
+    }
+    .admission-toggle-btn.active-new {
+        background: linear-gradient(90deg, #1b6ec2, #3a8dde);
+        color: #fff;
+        border: 2px solid #1b6ec2;
+    }
+    .admission-toggle-btn.active-existing {
+        background: #fff;
+        color: #198754;
+        border: 2px solid #198754;
+    }
+    .admission-toggle-btn.active-existing.selected {
+        background: linear-gradient(90deg, #198754, #43e97b);
+        color: #fff;
+        border: 2px solid #198754;
+    }
+    .admission-toggle-btn:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px #1b6ec233;
+    }
+</style>
+<script>
+function setAdmissionType(type) {
+    document.getElementById('admission_type').value = type;
+    const btnNew = document.getElementById('btn-new');
+    const btnExisting = document.getElementById('btn-existing');
+    const enrollGroup = document.getElementById('enrollment-group');
+    if(type === 'new') {
+        btnNew.classList.add('active-new');
+        btnExisting.classList.remove('active-existing');
+        enrollGroup.style.display = 'none';
+        document.getElementById('enrollment_number').required = false;
+    } else {
+        btnNew.classList.remove('active-new');
+        btnExisting.classList.add('active-existing');
+        enrollGroup.style.display = '';
+        document.getElementById('enrollment_number').required = true;
+    }
+}
+window.addEventListener('DOMContentLoaded', function() {
+    setAdmissionType('new');
+});
+</script>
+{% endblock %} 

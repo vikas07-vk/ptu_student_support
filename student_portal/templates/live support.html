@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+
+{% block title %}Live Support - PTU Student Support{% endblock %}
+
+{% block extra_css %}
+<style>
+    .support-container {
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .support-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .support-header h2 {
+        color: var(--primary-color);
+        margin-bottom: 10px;
+    }
+
+    .support-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group.full-width {
+        grid-column: span 2;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--dark-color);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .form-group textarea {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    .submit-area {
+        grid-column: span 2;
+        text-align: center;
+    }
+
+    .submit-btn {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .submit-btn:hover {
+        background-color: #6a0000;
+    }
+
+    .support-info {
+        margin-top: 30px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 4px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .info-item i {
+        margin-right: 10px;
+        color: var(--primary-color);
+        font-size: 20px;
+        width: 30px;
+        text-align: center;
+    }
+
+    @media (max-width: 768px) {
+        .support-form {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group.full-width {
+            grid-column: span 1;
+        }
+
+        .submit-area {
+            grid-column: span 1;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="support-container">
+    <div class="support-header">
+        <h2><i class="fas fa-headset"></i> Live Support</h2>
+        <p>Fill out the form below and our support team will get back to you within 24 hours</p>
+    </div>
+
+    <form id="supportForm" class="support-form">
+        <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required>
+         </div>
+
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="studentId">Student ID (if applicable)</label>
+            <input type="text" id="studentId" name="studentId">
+        </div>
+
+        <div class="form-group">
+            <label for="department">Department</label>
+            <select id="department" name="department">
+                <option value="">Select Department</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Mechanical">Mechanical</option>
+                <option value="Civil">Civil</option>
+                <option value="Electronics">Electronics</option>
+                <option value="MBA">MBA</option>
+                <option value="MCA">MCA</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group full-width">
+            <label for="queryType">Query Type</label>
+            <select id="queryType" name="queryType" required>
+                <option value="">Select Query Type</option>
+                <option value="Admission">Admission Related</option>
+                <option value="Fees">Fees Payment</option>
+                <option value="Examination">Examination</option>
+                <option value="Hostel">Hostel Facilities</option>
+                <option value="Scholarship">Scholarship</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group full-width">
+            <label for="message">Detailed Description</label>
+            <textarea id="query" name="query" required></textarea>
+
+        </div>
+
+        <div class="form-group full-width">
+            <label for="attachments">Attachments (if any)</label>
+            <input type="file" id="attachments" name="attachments" multiple>
+        </div>
+
+        <div class="submit-area">
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-paper-plane"></i> Submit Request
+            </button>
+        </div>
+    </form>
+
+    <div class="support-info">
+        <h3><i class="fas fa-info-circle"></i> Additional Support Options</h3>
+        
+        <div class="info-item">
+            <i class="fas fa-phone"></i>
+            <div>
+                <strong>Helpline:</strong> +91-123-4567890<br>
+                <small>Monday to Friday, 9:00 AM to 5:00 PM</small>
+            </div>
+        </div>
+
+        <div class="info-item">
+            <i class="fas fa-envelope"></i>
+            <div>
+                <strong>Email:</strong> "miss.vanshika.sharma.10@gmail.com"<br>
+                <small>Response within 24 hours</small>
+            </div>
+        </div>
+
+        <div class="info-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <div>
+                <strong>In-Person Support:</strong><br>
+                Student Support Center, Ground Floor, Admin Block, PTU Campus
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('supportForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Show loading state
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+        
+        // Simulate form submission (replace with actual AJAX call)
+        setTimeout(() => {
+            // Reset form
+            this.reset();
+            
+            // Show success message
+            alert('Your support request has been submitted successfully. We will contact you soon.');
+            
+            // Restore button
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }, 1500);
+    });
+</script>
+{% endblock %}

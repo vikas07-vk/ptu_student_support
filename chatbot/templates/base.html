@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PTU Student Support{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="{{ url_for('static', filename='images/ptu-logo.png') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <img src="{{ url_for('static', filename='images/ptu-logo.png') }}" alt="PTU Logo" class="logo">
+            <h1>PTU Student Support</h1>
+            <div class="header-actions">
+                {% block header_actions %}
+                <a href="https://ptu.ac.in/" target="_blank" class="ptu-website-btn">
+                    <i class="fas fa-external-link-alt"></i> PTU Website
+                </a>
+                {% endblock %}
+            </div>
+        </header>
+
+        <main class="main-content">
+            {% block content %}
+            <!-- Main content will be inserted here -->
+            {% endblock %}
+        </main>
+
+        <footer class="app-footer">
+            <p>© 2023 IKGPTU Student Support | <a href="https://ptu.ac.in/" target="_blank">Official Website</a></p>
+            <div class="footer-links">
+                <a href="#" id="privacy-policy">Privacy Policy</a>
+                <a href="#" id="terms-of-use">Terms of Use</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Include common JavaScript files -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-wave-wrapper">
+        <div class="footer-wave">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
+                <path fill="currentColor" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </div>
+    </div>
+    <div class="footer-content">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <div class="footer-section">
+                        <h5 class="footer-title">About IKGPTU</h5>
+                        <p class="footer-description">I.K. Gujral Punjab Technical University (IKGPTU) is a state university established by Govt. of Punjab vide Punjab Act No. 1 of 1997.</p>
+                        <div class="social-links">
+                            <a href="https://www.facebook.com/ikgptu.india" target="_blank" class="social-link">
+                                <i class="bi bi-facebook"></i>
+                            </a>
+                            <a href="https://twitter.com/PTUIndia" target="_blank" class="social-link">
+                                <i class="bi bi-twitter"></i>
+                            </a>
+                            <a href="https://www.linkedin.com/school/i.k.-gujral-punjab-technical-university/" target="_blank" class="social-link">
+                                <i class="bi bi-linkedin"></i>
+                            </a>
+                            <a href="https://www.instagram.com/ikgptu.official/" target="_blank" class="social-link">
+                                <i class="bi bi-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <div class="footer-section">
+                        <h5 class="footer-title">Quick Links</h5>
+                        <ul class="footer-links">
+                            <li>
+                                <a href="https://ptu.ac.in/about/" target="_blank">
+                                    <i class="bi bi-chevron-right"></i> About Us
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://ptu.ac.in/academics/" target="_blank">
+                                    <i class="bi bi-chevron-right"></i> Academics
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://ptu.ac.in/noticeboard-main/" target="_blank">
+                                    <i class="bi bi-chevron-right"></i> Notice Board
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://ptu.ac.in/examination/" target="_blank">
+                                    <i class="bi bi-chevron-right"></i> Examination
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://ptu.ac.in/student-corner/" target="_blank">
+                                    <i class="bi bi-chevron-right"></i> Student Corner
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="footer-section">
+                        <h5 class="footer-title">Contact Info</h5>
+                        <ul class="footer-contact">
+                            <li>
+                                <div class="contact-icon">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                </div>
+                                <div class="contact-text">
+                                    Jalandhar - Kapurthala Highway, Kapurthala, Punjab - 144603
+                                </div>
+                            </li>
+                            <li>
+                                <div class="contact-icon">
+                                    <i class="bi bi-telephone-fill"></i>
+                                </div>
+                                <div class="contact-text">
+                                    Student Enquiry: 01822-282513
+                                </div>
+                            </li>
+                            <li>
+                                <div class="contact-icon">
+                                    <i class="bi bi-envelope-fill"></i>
+                                </div>
+                                <div class="contact-text">
+                                    registrar@ptu.ac.in
+                                </div>
+                            </li>
+                            <li>
+                                <div class="contact-icon">
+                                    <i class="bi bi-clock-fill"></i>
+                                </div>
+                                <div class="contact-text">
+                                    Monday - Friday: 9:00 AM - 5:00 PM
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="copyright">&copy; <span id="currentYear"></span> I.K. Gujral Punjab Technical University. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+.footer {
+    position: relative;
+    margin-top: 2rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: rgba(255, 255, 255, 0.9);
+    overflow: hidden;
+    pointer-events: none; /* Prevent footer from blocking clicks */
+}
+
+.footer * {
+    pointer-events: auto; /* Re-enable clicks for footer content */
+}
+
+.footer-wave-wrapper {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    overflow: hidden;
+    pointer-events: none; /* Ensure wave doesn't block clicks */
+}
+
+.footer-wave {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    color: var(--primary-color);
+    line-height: 0;
+}
+
+.footer-wave svg {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform: rotateY(180deg);
+}
+
+.footer-content {
+    position: relative;
+    padding: 1.5rem 0 1rem;
+    background: linear-gradient(135deg, rgba(43, 76, 95, 0.95), rgba(59, 138, 196, 0.95));
+    backdrop-filter: blur(10px);
+    z-index: 1; /* Ensure content stays above wave */
+}
+
+.footer-section {
+    padding: 0 0.5rem;
+}
+
+.footer-title {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.7rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.footer-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.footer-description {
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.8;
+    margin-bottom: 0.7rem;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    background: white;
+    color: var(--primary-color);
+    transform: translateY(-5px);
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 1rem;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.footer-links a i {
+    margin-right: 0.5rem;
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: white;
+    transform: translateX(5px);
+}
+
+.footer-links a:hover i {
+    transform: translateX(3px);
+}
+
+.footer-contact {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-contact li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.contact-icon {
+    width: 35px;
+    height: 35px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.contact-icon i {
+    color: white;
+    font-size: 1rem;
+}
+
+.contact-text {
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+}
+
+.footer-bottom {
+    background: rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 0 0.2rem 0;
+    position: relative;
+}
+
+.copyright {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Animation for wave */
+@keyframes wave {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(-25%);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .footer {
+        margin-top: 4rem;
+    }
+
+    .footer-wave {
+        top: -50px;
+    }
+
+    .footer-wave svg {
+        height: 50px;
+    }
+
+    .footer-content {
+        padding: 3rem 0 2rem;
+    }
+
+    .footer-section {
+        text-align: center;
+        padding: 0;
+    }
+
+    .footer-title::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .social-links {
+        justify-content: center;
+    }
+
+    .footer-contact li {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .contact-icon {
+        margin: 0 0 1rem 0;
+    }
+}
+
+/* Hover effects */
+.footer-section:hover .footer-title::after {
+    width: 75px;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.contact-icon {
+    transition: all 0.3s ease;
+}
+
+.footer-contact li:hover .contact-icon {
+    transform: scale(1.1);
+    background: white;
+}
+
+.footer-contact li:hover .contact-icon i {
+    color: var(--primary-color);
+}
+</style>
+
+<script>
+document.getElementById('currentYear').textContent = new Date().getFullYear();
+</script> 

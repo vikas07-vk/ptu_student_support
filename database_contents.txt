@@ -1,0 +1,117 @@
+Database Contents Report
+======================
+
+Database path: C:\Users\ACER\OneDrive\Desktop\ptuproject\student_portal.db
+Connected to database successfully
+
+Found 5 tables:
+- user
+- admin
+- notice
+- support_ticket
+- chat_history
+
+================================================================================
+Table: user
+================================================================================
+Columns (13):
+- id
+- username
+- email
+- password
+- full_name
+- course
+- semester
+- enrollment_number
+- profile_photo
+- created_at
+- email_verified
+- email_verification_token
+- token_expiry
+
+Rows: 4
+
+Data (showing up to 5 rows):
+  id  username    email                     password                                                                                                full_name      course      semester    enrollment_number  profile_photo                 created_at                    email_verified  email_verification_token    token_expiry
+----  ----------  ------------------------  ------------------------------------------------------------------------------------------------------  -------------  --------  ----------  -------------------  ----------------------------  --------------------------  ----------------  --------------------------  --------------
+   1  testuser    test@example.com          pbkdf2:sha256:600000$tsiuzsFTLL4PYMvO$4463fcac863c8825bc4dc78725d1f78ce7ed6efa5c814af190ec2b79c7fcbdde  Test User      B.Tech             1                12345  testuser_20250418_003902.png  2025-04-17 19:04:00.383069                 1
+   2  Viki        vikas00@gmail.com         pbkdf2:sha256:600000$7o3tWAcD1vrSsmLi$43b96d5a51cc3af1c452c46021803ee410f4a4c793f8bceeaae53cdeed52fdf5  VIKAS          B.Tech             6              2224614                                2025-04-17 19:05:46.983024                 0
+   3  Rohan       rohanjaswal822@gmail.com  pbkdf2:sha256:600000$5252mnD6Ojspk6k2$c15a53519668cb0325ed5e5717e62dd72d5c72148f311bac5c726fc33e289835  ROHAN JASWAL   B.Tech             6              2224521  Rohan_20250418_120039.png     2025-04-18 06:28:58.037945
+   4  rohani      rohani121@gmail.com       pbkdf2:sha256:600000$VDQONeZU5vcLS5Fo$fe82110a7cc90f00a905da12dc2d50861cf61f00ccd5ae4f3116149fb28efabd  rohani sharma  B.Tech             6              2224545  rohani_20250418_152938.png    2025-04-18 08:48:19.311837
+
+================================================================================
+Table: admin
+================================================================================
+Columns (5):
+- id
+- username
+- email
+- password
+- created_at
+
+Rows: 1
+
+Data (showing up to 5 rows):
+  id  username    email              password                                                                                                created_at
+----  ----------  -----------------  ------------------------------------------------------------------------------------------------------  --------------------------
+   1  admin       admin@example.com  pbkdf2:sha256:600000$6wSl25pUkMJsw5Wc$785206ed4baa8f63b6b8e7e4b985c454aabad7192e044e01ca5eba279a92596e  2025-04-17 19:04:00.375065
+
+================================================================================
+Table: notice
+================================================================================
+Columns (6):
+- id
+- title
+- date_posted
+- link
+- created_at
+- is_new
+
+Rows: 2
+
+Data (showing up to 5 rows):
+  id  title                            date_posted                 link    created_at                    is_new
+----  -------------------------------  --------------------------  ------  --------------------------  --------
+   1  Welcome to PTU Student Portal    2025-04-17 19:04:00.371065  #       2025-04-17 19:04:00.380064         0
+   2  Important: Exam Schedule Update  2025-04-17 19:04:00.372069  #       2025-04-17 19:04:00.380064         0
+
+================================================================================
+Table: support_ticket
+================================================================================
+Columns (9):
+- id
+- user_id
+- subject
+- message
+- status
+- created_at
+- updated_at
+- deleted
+- deleted_at
+
+Rows: 0
+
+================================================================================
+Table: chat_history
+================================================================================
+Columns (5):
+- id
+- user_id
+- message
+- response
+- timestamp
+
+Rows: 6
+
+Data (showing up to 5 rows):
+  id    user_id  message       response                                                                                        timestamp
+----  ---------  ------------  ----------------------------------------------------------------------------------------------  --------------------------
+   1          1  hi            Hello! How can I help you today?                                                                2025-04-17 19:08:50.178011
+   2          1  hi            Hello! How can I help you today?                                                                2025-04-17 19:17:18.724067
+   3          3  hi            Hello! How can I help you today?                                                                2025-04-18 06:30:08.104151
+   4          4  hi            Hello! How can I help you today?                                                                2025-04-18 09:59:44.927857
+   5          4  what is fees  You can find fee details and payment options on the university portal. Need help accessing it?  2025-04-18 09:59:49.358293
+
+... and 1 more rows
+
+Database connection closed

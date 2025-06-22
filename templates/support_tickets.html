@@ -1,0 +1,955 @@
+{% extends "base.html" %}
+
+{% block title %}Queries - IKG PTU Student Support{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-md-3 col-lg-2">
+            <div class="card sidebar-card">
+                <div class="card-body p-0">
+                    <button class="btn btn-primary w-100 mb-3 compose-btn" data-bs-toggle="modal" data-bs-target="#composeModal">
+                        <i class="bi bi-plus-lg me-2"></i> New Query
+                    </button>
+                    <div class="list-group list-group-flush nav-menu">
+                        <a href="#" class="list-group-item list-group-item-action active" data-view="inbox">
+                            <i class="bi bi-inbox-fill"></i> Inbox
+                            <span class="badge bg-primary rounded-pill float-end inbox-count">0</span>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action" data-view="sent">
+                            <i class="bi bi-send-fill"></i> Sent
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action" data-view="starred">
+                            <i class="bi bi-star-fill"></i> Starred
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action" data-view="archive">
+                            <i class="bi bi-archive-fill"></i> Archive
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action" data-view="trash">
+                            <i class="bi bi-trash-fill"></i> Trash
+                            <span class="badge bg-danger rounded-pill float-end trash-count">0</span>
+                        </a>
+                        </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-9 col-lg-10">
+            <div class="card main-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <div class="form-check me-3">
+                            <input class="form-check-input" type="checkbox" id="selectAll">
+                        </div>
+                        <h5 class="mb-0 d-flex align-items-center" id="currentViewTitle">
+                            <i class="bi bi-inbox-fill me-2"></i> Inbox
+                    </h5>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-light btn-sm action-btn" id="refreshBtn" title="Refresh">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </button>
+                        <button class="btn btn-light btn-sm action-btn" id="archiveSelectedBtn" disabled title="Archive">
+                            <i class="bi bi-archive-fill"></i>
+                        </button>
+                        <button class="btn btn-light btn-sm action-btn" id="deleteSelectedBtn" disabled title="Delete">
+                            <i class="bi bi-trash-fill"></i>
+                        </button>
+                        <div class="btn-group">
+                            <button class="btn btn-light btn-sm action-btn dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-check2-all me-2"></i>Mark all as read</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-sort-down me-2"></i>Sort by date</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-filter me-2"></i>Filter queries</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div id="inboxView" class="query-view active">
+                        {% if tickets %}
+                            <div class="list-group list-group-flush" id="queryList">
+                                {% for ticket in tickets %}
+                                    <div class="list-group-item list-group-item-action query-item" data-id="{{ ticket.id }}" data-status="{{ ticket.status }}" data-date="{{ ticket.created_at.strftime('%Y-%m-%d') }}">
+                                        <div class="d-flex w-100 justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center flex-grow-1">
+                                                <div class="form-check me-3">
+                                                    <input class="form-check-input query-checkbox" type="checkbox" value="{{ ticket.id }}">
+                                                </div>
+                                                <div class="query-content">
+                                                    <div class="d-flex align-items-center mb-1">
+                                                        <h6 class="mb-0 query-subject">{{ ticket.subject }}</h6>
+                                                        <span class="badge status-badge {% if ticket.status == 'Open' %}badge-warning{% elif ticket.status == 'In Progress' %}badge-info{% else %}badge-success{% endif %} ms-2">
+                                                            {{ ticket.status }}
+                                                        </span>
+                                                    </div>
+                                                    <p class="mb-0 text-muted small query-preview">{{ ticket.message[:100] }}...</p>
+                                                </div>
+                                            </div>
+                                            <div class="query-meta d-flex align-items-center">
+                                                <div class="query-actions me-3">
+                                                    <button class="btn btn-link action-icon star-btn" data-id="{{ ticket.id }}" title="Star">
+                                                        <i class="bi bi-star"></i>
+                                                    </button>
+                                                    <button class="btn btn-link action-icon archive-btn" data-id="{{ ticket.id }}" title="Archive">
+                                                        <i class="bi bi-archive"></i>
+                                                    </button>
+                                                    <button class="btn btn-link action-icon delete-btn" data-id="{{ ticket.id }}" title="Delete">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="query-date">
+                                                    <small class="text-muted">{{ ticket.created_at.strftime('%b %d, %Y') }}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="empty-state">
+                                <div class="empty-state-icon">
+                                    <i class="bi bi-inbox"></i>
+                                </div>
+                                <h4>No Queries Yet</h4>
+                                <p class="text-muted">Create your first query by clicking the "New Query" button.</p>
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#composeModal">
+                                    <i class="bi bi-plus-lg me-2"></i> New Query
+                                </button>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div id="trashView" class="query-view">
+                        <div class="list-group list-group-flush" id="trashList">
+                            <!-- Trash items will be added here dynamically -->
+                        </div>
+                        <div class="text-center py-5 empty-trash" style="display: none;">
+                            <i class="bi bi-trash display-1 text-muted"></i>
+                            <p class="mt-3">Trash is empty</p>
+                        </div>
+                    </div>
+                    
+                    <div id="archiveView" class="query-view">
+                        <div class="list-group list-group-flush" id="archiveList">
+                            <!-- Archive items will be added here dynamically -->
+                        </div>
+                        <div class="text-center py-5 empty-archive" style="display: none;">
+                            <i class="bi bi-archive display-1 text-muted"></i>
+                            <p class="mt-3">Archive is empty</p>
+                        </div>
+                    </div>
+                    
+                    <div id="starredView" class="query-view">
+                        <div class="list-group list-group-flush" id="starredList">
+                            <!-- Starred items will be added here dynamically -->
+                        </div>
+                        <div class="text-center py-5 empty-starred" style="display: none;">
+                            <i class="bi bi-star display-1 text-muted"></i>
+                            <p class="mt-3">No starred queries</p>
+                        </div>
+                    </div>
+                    
+                    <div id="sentView" class="query-view">
+                        <div class="list-group list-group-flush" id="sentList">
+                            <!-- Sent items will be added here dynamically -->
+                        </div>
+                        <div class="text-center py-5 empty-sent" style="display: none;">
+                            <i class="bi bi-send display-1 text-muted"></i>
+                            <p class="mt-3">No sent queries</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                </div>
+            </div>
+        </div>
+        
+<!-- Compose Modal -->
+<div class="modal fade" id="composeModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>New Query</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ url_for('support_tickets') }}" id="composeForm">
+                    <input type="hidden" name="action" value="create">
+                    <div class="mb-3">
+                        <label for="subject" class="form-label">Subject</label>
+                        <input type="text" class="form-control" id="subject" name="subject" required placeholder="Enter query subject">
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message</label>
+                        <div class="compose-editor">
+                            <div class="compose-toolbar">
+                                <button type="button" class="btn btn-sm btn-light" title="Bold">
+                                    <i class="bi bi-type-bold"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-light" title="Italic">
+                                    <i class="bi bi-type-italic"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-light" title="Bullet List">
+                                    <i class="bi bi-list-ul"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-light" title="Add Link">
+                                    <i class="bi bi-link-45deg"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-light" title="Attach File">
+                                    <i class="bi bi-paperclip"></i>
+                                </button>
+                            </div>
+                            <textarea class="form-control compose-textarea" id="message" name="message" rows="8" required placeholder="Type your message here..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                            <i class="bi bi-x-lg me-2"></i>Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary send-btn">
+                            <i class="bi bi-send-fill me-2"></i>Send Query
+                        </button>
+                </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+<!-- View Query Modal -->
+<div class="modal fade" id="viewQueryModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewQuerySubject"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+            <div class="modal-body">
+                <div class="query-meta mb-3">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <span class="badge bg-primary me-2" id="viewQueryStatus"></span>
+                            <small class="text-muted" id="viewQueryDate"></small>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary me-2" id="replyBtn">
+                                <i class="bi bi-reply"></i> Reply
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary me-2" id="archiveQueryBtn">
+                                <i class="bi bi-archive"></i> Archive
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" id="deleteQueryBtn">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="query-content p-3 bg-light rounded" id="viewQueryContent">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Sidebar styling */
+    .sidebar-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        background: white;
+        overflow: hidden;
+    }
+    
+    .compose-btn {
+        margin: 1rem;
+        width: calc(100% - 2rem) !important;
+        border-radius: 10px;
+        padding: 0.8rem;
+        font-weight: 500;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border: none;
+        transition: all 0.3s ease;
+    }
+    
+    .compose-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+    
+    .nav-menu .list-group-item {
+        border: none;
+        padding: 0.8rem 1.5rem;
+        color: #666;
+        transition: all 0.3s ease;
+        border-radius: 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .nav-menu .list-group-item i {
+        font-size: 1.1rem;
+        width: 20px;
+        text-align: center;
+        color: inherit;
+    }
+    
+    .nav-menu .list-group-item:hover {
+        background: rgba(var(--primary-color-rgb), 0.05);
+        color: var(--primary-color);
+        padding-left: 2rem;
+    }
+    
+    .nav-menu .list-group-item.active {
+        background: var(--primary-color);
+        color: white;
+        font-weight: 500;
+    }
+    
+    .nav-menu .list-group-item.active::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 4px;
+        background: var(--secondary-color);
+    }
+    
+    .nav-menu .list-group-item .badge {
+        transition: all 0.3s ease;
+    }
+    
+    .nav-menu .list-group-item:hover .badge {
+        transform: scale(1.1);
+    }
+    
+    /* Main content styling */
+    .main-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        background: white;
+        overflow: hidden;
+    }
+    
+    .card-header {
+        background: white;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 1rem 1.5rem;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+    }
+    
+    .action-btn {
+        width: 35px;
+        height: 35px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+    
+    .action-btn:hover {
+        background: rgba(var(--primary-color-rgb), 0.1);
+        color: var(--primary-color);
+    }
+    
+    /* Query items styling */
+    .query-item {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        background: white;
+    }
+    
+    .query-item:hover {
+        background: rgba(var(--primary-color-rgb), 0.02);
+        transform: translateX(5px);
+    }
+    
+    .query-item.loading {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+    
+    .query-subject {
+        color: #2c3e50;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+    
+    .query-preview {
+        color: #666;
+        font-size: 0.9rem;
+        max-width: 600px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    .status-badge {
+        font-size: 0.75rem;
+        padding: 0.35em 0.8em;
+        border-radius: 20px;
+    }
+    
+    .badge-warning {
+        background: rgba(255, 193, 7, 0.1);
+        color: #ffc107;
+    }
+    
+    .badge-info {
+        background: rgba(13, 202, 240, 0.1);
+        color: #0dcaf0;
+    }
+    
+    .badge-success {
+        background: rgba(25, 135, 84, 0.1);
+        color: #198754;
+    }
+    
+    .query-meta {
+        font-size: 0.85rem;
+    }
+    
+    .query-actions {
+        display: flex;
+        gap: 0.5rem;
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+    
+    .query-item:hover .query-actions {
+        opacity: 1;
+    }
+    
+    .action-icon {
+        color: #6c757d;
+        padding: 0.4rem;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .action-icon:hover {
+        background: rgba(var(--primary-color-rgb), 0.1);
+        color: var(--primary-color);
+        transform: scale(1.1);
+    }
+    
+    .action-icon.star-btn.starred {
+        color: #ffc107;
+    }
+    
+    .action-icon.delete-btn:hover {
+        background: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+    }
+    
+    .action-icon.archive-btn:hover {
+        background: rgba(13, 202, 240, 0.1);
+        color: #0dcaf0;
+    }
+    
+    /* View switching animation */
+    .query-view {
+        display: none;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+    }
+    
+    .query-view.active {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Empty state styling */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: rgba(var(--primary-color-rgb), 0.02);
+        border-radius: 15px;
+        margin: 1rem;
+    }
+    
+    .empty-state-icon {
+        font-size: 3rem;
+        color: var(--primary-color);
+        opacity: 0.3;
+        margin-bottom: 1rem;
+    }
+    
+    .empty-state h4 {
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+    
+    .empty-state p {
+        color: #666;
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Loading animation */
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    
+    .rotate-animation {
+        animation: rotate 1s linear infinite;
+    }
+    
+    /* Compose modal styling */
+    .compose-editor {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .compose-toolbar {
+        padding: 0.5rem;
+        background: #f8f9fa;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        display: flex;
+        gap: 5px;
+    }
+    
+    .compose-textarea {
+        border: none;
+        resize: none;
+        padding: 1rem;
+    }
+    
+    .compose-textarea:focus {
+        box-shadow: none;
+    }
+    
+    /* Animations */
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .query-item {
+        animation: slideIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    .modal.fade .modal-dialog {
+        transform: scale(0.95);
+        transition: transform 0.3s ease;
+    }
+    
+    .modal.show .modal-dialog {
+        transform: scale(1);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .query-actions {
+            display: none;
+        }
+        
+        .query-item:hover .query-actions {
+            display: flex;
+        }
+        
+        .action-buttons {
+            display: none;
+        }
+        
+        .card-header .dropdown {
+            display: block;
+        }
+    }
+
+    /* Add loading spinner */
+    .loading::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 20px;
+        height: 20px;
+        margin: -10px 0 0 -10px;
+        border: 2px solid var(--primary-color);
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: rotate 1s linear infinite;
+    }
+
+    /* Improve notification styling */
+    .alert {
+        border: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .alert-success {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .alert-danger {
+        background: #f8d7da;
+        color: #721c24;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get CSRF token
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    // Initialize tooltips
+    const tooltips = document.querySelectorAll('[title]');
+    tooltips.forEach(tooltip => {
+        new bootstrap.Tooltip(tooltip);
+    });
+
+    // Handle view switching
+    const views = {
+        inbox: document.getElementById('inboxView'),
+        sent: document.getElementById('sentView'),
+        starred: document.getElementById('starredView'),
+        archive: document.getElementById('archiveView'),
+        trash: document.getElementById('trashView')
+    };
+
+    let currentView = 'inbox';
+
+    function switchView(viewName) {
+        // Hide all views and remove active
+        Object.entries(views).forEach(([name, view]) => {
+            view.style.display = 'none';
+            view.classList.remove('active');
+        });
+        // Show selected view and add active
+        if (views[viewName]) {
+            views[viewName].style.display = 'block';
+            views[viewName].classList.add('active');
+        } else {
+            // fallback: show inbox
+            views['inbox'].style.display = 'block';
+            views['inbox'].classList.add('active');
+        }
+        currentView = viewName;
+        // Update header title and icon
+        const titleEl = document.getElementById('currentViewTitle');
+        const viewData = {
+            inbox: { icon: 'bi-inbox-fill', text: 'Inbox' },
+            sent: { icon: 'bi-send-fill', text: 'Sent' },
+            starred: { icon: 'bi-star-fill', text: 'Starred' },
+            archive: { icon: 'bi-archive-fill', text: 'Archive' },
+            trash: { icon: 'bi-trash-fill', text: 'Trash' }
+        };
+        if (viewData[viewName]) {
+            titleEl.innerHTML = `<i class="bi ${viewData[viewName].icon} me-2"></i>${viewData[viewName].text}`;
+        } else {
+            titleEl.innerHTML = `<i class="bi bi-inbox-fill me-2"></i>Inbox`;
+        }
+        // Update active state in sidebar
+        document.querySelectorAll('.nav-menu .list-group-item').forEach(item => {
+            item.classList.remove('active');
+            if (item.getAttribute('data-view') === viewName) {
+                item.classList.add('active');
+                // Fallback: force style
+                item.style.background = 'var(--primary-color)';
+                item.style.color = 'white';
+            } else {
+                item.style.background = '';
+                item.style.color = '';
+            }
+        });
+        updateActionButtons();
+        // Debug log
+        console.log('Switched to view:', viewName);
+    }
+
+    // Ensure only the inbox is visible on load
+    Object.entries(views).forEach(([name, view]) => {
+        if (name === 'inbox') {
+            view.style.display = 'block';
+            view.classList.add('active');
+        } else {
+            view.style.display = 'none';
+            view.classList.remove('active');
+        }
+    });
+
+    // Handle view switching clicks
+    document.querySelectorAll('.nav-menu .list-group-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            switchView(item.getAttribute('data-view'));
+        });
+    });
+
+    // Setup query item listeners for all current and future items
+    function setupQueryItemListeners(item) {
+        const queryId = item.getAttribute('data-id');
+        // Star button
+        const starBtn = item.querySelector('.star-btn');
+        if (starBtn) {
+            starBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleStar(e.currentTarget, queryId);
+            });
+        }
+        // Delete button
+        const deleteBtn = item.querySelector('.delete-btn');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                deleteQuery(queryId, currentView === 'trash');
+            });
+        }
+        // Archive button
+        const archiveBtn = item.querySelector('.archive-btn');
+        if (archiveBtn) {
+            archiveBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                archiveQuery(queryId);
+            });
+        }
+        // Click to view
+        item.addEventListener('click', (e) => {
+            if (!e.target.closest('.query-actions')) {
+                viewQuery(queryId);
+            }
+        });
+    }
+    // Attach listeners to all existing query items in all views
+    Object.values(views).forEach(view => {
+        view.querySelectorAll('.query-item').forEach(setupQueryItemListeners);
+    });
+
+    // Add error handling and notifications
+    function showNotification(message, type = 'success') {
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3`;
+        notification.style.zIndex = '9999';
+        notification.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+
+    // Improve error handling
+    function handleError(error) {
+        console.error('Error:', error);
+        showNotification(error.message || 'An error occurred. Please try again.', 'danger');
+    }
+
+    // Add loading state handler
+    function setLoading(element, isLoading) {
+        if (isLoading) {
+            element.classList.add('loading');
+        } else {
+            element.classList.remove('loading');
+        }
+    }
+
+    // Update the fetch calls with better error handling
+    function toggleStar(btn, queryId) {
+        const queryItem = btn.closest('.query-item');
+        setLoading(queryItem, true);
+        
+        fetch('/toggle_star', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({ query_id: queryId })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to update star status');
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                const icon = btn.querySelector('i');
+                btn.classList.toggle('starred');
+                icon.classList.toggle('bi-star');
+                icon.classList.toggle('bi-star-fill');
+                showNotification('Query star status updated');
+            } else {
+                throw new Error(data.error || 'Failed to update star status');
+            }
+        })
+        .catch(handleError)
+        .finally(() => setLoading(queryItem, false));
+    }
+
+    // Handle delete functionality
+    function deleteQuery(queryId, permanent = false) {
+        if (!confirm(permanent ? 'Permanently delete this query?' : 'Move this query to trash?')) {
+            return;
+        }
+
+        fetch('/delete_query', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({
+                query_id: queryId,
+                permanent: permanent
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const queryItem = document.querySelector(`[data-id="${queryId}"]`);
+                if (permanent) {
+                    queryItem.remove();
+                } else {
+                    // Move to trash
+                    const clone = queryItem.cloneNode(true);
+                    document.getElementById('trashList').appendChild(clone);
+                    setupQueryItemListeners(clone);
+                    queryItem.remove();
+                    document.querySelector('.empty-trash').style.display = 'none';
+                }
+                
+                updateCounters();
+            }
+        });
+    }
+
+    // Handle archive functionality
+    function archiveQuery(queryId) {
+        if (!confirm('Archive this query?')) {
+            return;
+        }
+
+        fetch('/archive_query', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({ query_id: queryId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const queryItem = document.querySelector(`[data-id="${queryId}"]`);
+                const clone = queryItem.cloneNode(true);
+                document.getElementById('archiveList').appendChild(clone);
+                setupQueryItemListeners(clone);
+                queryItem.remove();
+                document.querySelector('.empty-archive').style.display = 'none';
+                updateCounters();
+            }
+        });
+    }
+
+    // Handle bulk actions
+    const selectAllCheckbox = document.getElementById('selectAll');
+    selectAllCheckbox.addEventListener('change', () => {
+        const view = views[currentView];
+        view.querySelectorAll('.query-checkbox').forEach(checkbox => {
+            checkbox.checked = selectAllCheckbox.checked;
+        });
+        updateActionButtons();
+    });
+
+    document.getElementById('deleteSelectedBtn').addEventListener('click', () => {
+        const view = views[currentView];
+        const selected = Array.from(view.querySelectorAll('.query-checkbox:checked'));
+        if (selected.length > 0) {
+            const permanent = currentView === 'trash';
+            if (confirm(`${permanent ? 'Permanently delete' : 'Move to trash'} ${selected.length} selected queries?`)) {
+                selected.forEach(checkbox => {
+                    deleteQuery(checkbox.value, permanent);
+                });
+            }
+        }
+    });
+
+    document.getElementById('archiveSelectedBtn').addEventListener('click', () => {
+        const view = views[currentView];
+        const selected = Array.from(view.querySelectorAll('.query-checkbox:checked'));
+        if (selected.length > 0 && confirm(`Archive ${selected.length} selected queries?`)) {
+            selected.forEach(checkbox => archiveQuery(checkbox.value));
+        }
+    });
+
+    // Update action buttons state
+    function updateActionButtons() {
+        const view = views[currentView];
+        const hasSelection = view.querySelectorAll('.query-checkbox:checked').length > 0;
+        document.getElementById('deleteSelectedBtn').disabled = !hasSelection;
+        document.getElementById('archiveSelectedBtn').disabled = !hasSelection || currentView === 'archive';
+    }
+
+    // Update counters
+    function updateCounters() {
+        document.querySelector('.inbox-count').textContent = 
+            document.querySelectorAll('#inboxView .query-item').length;
+        document.querySelector('.trash-count').textContent = 
+            document.querySelectorAll('#trashView .query-item').length;
+    }
+
+    // Handle refresh button
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+        const icon = document.querySelector('#refreshBtn i');
+        icon.classList.add('rotate-animation');
+        
+        // Simulate refresh
+        fetch('/refresh_queries')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                }
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    icon.classList.remove('rotate-animation');
+                }, 1000);
+            });
+    });
+
+    // Initialize counters
+    updateCounters();
+});
+</script>
+{% endblock %} 

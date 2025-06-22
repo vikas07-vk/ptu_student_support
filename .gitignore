@@ -1,0 +1,32 @@
+# Python cache and environment
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite
+*.db
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# Models and checkpoints
+*.h5
+*.pth
+*.pkl
+
+# Data
+dataset/
+data/
+*.xlsx
+*.csv
+
+# Git settings
+.git/
+.gitattributes
+
+# System files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4 mb-4">Select Your Stream</h2>
+    <div class="row justify-content-center">
+        {% for stream in streams %}
+        <div class="col-md-4 mb-4 d-flex justify-content-center">
+            <a href="{{ url_for('show_notes', stream=stream) }}" class="stream-card">
+                {{ stream }}
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<style>
+    .stream-card {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 100px;
+        background: linear-gradient(135deg, #274B8A, #1B2845 80%);
+        color: #fff;
+        font-size: 1.2rem;
+        font-weight: 600;
+        border-radius: 18px;
+        box-shadow: 0 4px 16px rgba(44, 62, 80, 0.12);
+        text-align: center;
+        text-decoration: none;
+        transition: transform 0.15s, box-shadow 0.15s;
+        margin: 0 10px;
+        padding: 30px 0;
+    }
+    .stream-card:hover {
+        transform: translateY(-4px) scale(1.04);
+        box-shadow: 0 8px 24px rgba(44, 62, 80, 0.22);
+        text-decoration: none;
+        color: #fff;
+    }
+    @media (max-width: 768px) {
+        .col-md-4 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+</style>
+{% endblock %} 

@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}User Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Chat History</h5>
+            </div>
+            <div class="card-body">
+                {% if chat_history %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Message</th>
+                                <th>Response</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for chat in chat_history %}
+                            <tr>
+                                <td>{{ chat.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td>{{ chat.user_message }}</td>
+                                <td>{{ chat.bot_response }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">No chat history available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Frequently Asked Questions (FAQs)</h5>
+            </div>
+            <div class="card-body" style="max-height: 520px; overflow-y: auto;">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item mb-2">
+                        <h6 class="accordion-header" id="faq1">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
+                                What is Centralized Online Counselling?
+                            </button>
+                        </h6>
+                        <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="faq1" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Through Centralized Online Counselling, candidates can get admission in the Constituent Campuses/Affiliated Colleges of participating Universities according to their choice on the basis of their Rank/Merit by participating online. All activities are done online through the web module.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item mb-2">
+                        <h6 class="accordion-header" id="faq2">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                                For which courses is Centralized Online Counselling conducted?
+                            </button>
+                        </h6>
+                        <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="faq2" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <ul>
+                                    <li>B.Tech. (1st Year & Lateral Entry): Inter-se-merit of qualifying examination</li>
+                                    <li>B.Pharmacy: Inter-se-merit of qualifying examination</li>
+                                    <li>B.Arch.: Valid NATA Scores + 50:50 ratio of Qualifying Examination</li>
+                                    <li>MBA: CMAT & Inter-se-merit of Qualifying Examination</li>
+                                    <li>MCA: Inter-se-merit of Qualifying Examination</li>
+                                    <li>M.Tech.: Valid GATE Scores & Inter-se-merit of B.Tech. or equivalent exam</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item mb-2">
+                        <h6 class="accordion-header" id="faq3">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                                Do I need to pay the counselling fee twice for both rounds?
+                            </button>
+                        </h6>
+                        <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="faq3" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                No. This is a one-time payment to participate in all rounds of Centralized Online Counselling.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item mb-2">
+                        <h6 class="accordion-header" id="faq4">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
+                                Can I participate in both rounds of Centralized Online Counselling?
+                            </button>
+                        </h6>
+                        <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="faq4" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes, you can participate in both rounds. If you get a seat in the 1st round and are not satisfied, you may participate in the 2nd round.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item mb-2">
+                        <h6 class="accordion-header" id="faq5">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
+                                What documents are required at the time of admission?
+                            </button>
+                        </h6>
+                        <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="faq5" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <ul>
+                                    <li>10th & 12th DMC</li>
+                                    <li>Diploma DMCs (for Lateral Entry)</li>
+                                    <li>Graduation Degree (for PG courses)</li>
+                                    <li>Residential Certificate</li>
+                                    <li>Reserved Category Certificate (if applicable)</li>
+                                    <li>Passport Size Photograph</li>
+                                    <li>Migration Certificate</li>
+                                    <li>Aadhaar Card</li>
+                                    <li>Income Certificate (if applicable)</li>
+                                    <li>Entrance Exam Score Card (if applicable)</li>
+                                    <li>Centralized Online Counselling Registration Form</li>
+                                    <li>Allotment Letter</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item mb-2">
+                        <h6 class="accordion-header" id="faq6">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
+                                What is the Tuition Fee Waiver Scheme?
+                            </button>
+                        </h6>
+                        <div id="collapse6" class="accordion-collapse collapse" aria-labelledby="faq6" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                It is applicable for Economically Weaker Candidates from Punjab State with annual family income less than 8 Lakhs. For details, check notifications related to TFW Scheme on the IKGPTU website.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item mb-2">
+                        <h6 class="accordion-header" id="faq7">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse7" aria-expanded="false" aria-controls="collapse7">
+                                Can I apply for both 85% (Punjab Resident Quota) & 15% (Outside Punjab Quota)?
+                            </button>
+                        </h6>
+                        <div id="collapse7" class="accordion-collapse collapse" aria-labelledby="faq7" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                No. The candidate can participate under one quota only, either 85% or 15%, as per their state of eligibility.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item mb-2">
+                        <h6 class="accordion-header" id="faq8">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse8" aria-expanded="false" aria-controls="collapse8">
+                                I have a compartment/reappear in qualifying exam. Am I eligible for counselling?
+                            </button>
+                        </h6>
+                        <div id="collapse8" class="accordion-collapse collapse" aria-labelledby="faq8" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                No. Such candidates are not eligible to participate in Centralized Online Counselling.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item mb-2">
+                        <h6 class="accordion-header" id="faq9">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse9" aria-expanded="false" aria-controls="collapse9">
+                                How do I contact the university for official matters?
+                            </button>
+                        </h6>
+                        <div id="collapse9" class="accordion-collapse collapse" aria-labelledby="faq9" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <strong>Registrar Email:</strong> registrar@ptu.ac.in<br>
+                                <strong>Phone:</strong> +91-1822-282533, 282535, 282583<br>
+                                <strong>Student Enquiry:</strong> 01822-282531 (9:30AM To 4:30 PM)
+                            </div>
+                        </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

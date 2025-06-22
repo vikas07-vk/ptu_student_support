@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Notices - IKG PTU Student Portal{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-bell-fill me-2"></i>
+                        PTU Notices
+                    </h5>
+                    <a href="{{ url_for('refresh_notices') }}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-arrow-clockwise me-1"></i>
+                        Refresh Notices
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if notices.items %}
+                        <div class="list-group">
+                            {% for notice in notices.items %}
+                                <div class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between align-items-center">
+                                        <h6 class="mb-1">{{ notice.title }}</h6>
+                                        <small class="text-muted">{{ notice.date_posted.strftime('%d %b %Y') }}</small>
+                                    </div>
+                                    {% if notice.link %}
+                                        <a href="{{ notice.link }}" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
+                                            <i class="bi bi-file-earmark-text me-1"></i>
+                                            View Notice
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <nav aria-label="Notice pagination" class="mt-4">
+                            <ul class="pagination justify-content-center">
+                                {% if notices.has_prev %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('notices', page=notices.prev_num) }}">Previous</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Previous</span>
+                                    </li>
+                                {% endif %}
+                                
+                                {% for page_num in notices.iter_pages(left_edge=2, left_current=2, right_current=3, right_edge=2) %}
+                                    {% if page_num %}
+                                        {% if notices.page == page_num %}
+                                            <li class="page-item active">
+                                                <span class="page-link">{{ page_num }}</span>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ url_for('notices', page=page_num) }}">{{ page_num }}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% else %}
+                                        <li class="page-item disabled">
+                                            <span class="page-link">...</span>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% if notices.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('notices', page=notices.next_num) }}">Next</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Next</span>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-bell-slash display-1 text-muted"></i>
+                            <p class="mt-3">No notices available</p>
+                            <a href="{{ url_for('refresh_notices') }}" class="btn btn-primary">
+                                <i class="bi bi-arrow-clockwise me-1"></i>
+                                Refresh Notices
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .list-group-item {
+        transition: all 0.3s ease;
+        border-left: 4px solid transparent;
+    }
+    
+    .list-group-item:hover {
+        border-left-color: var(--primary-color);
+        background-color: rgba(var(--primary-color-rgb), 0.05);
+        transform: translateX(5px);
+    }
+    
+    .list-group-item h6 {
+        color: #2c3e50;
+        font-weight: 600;
+        margin-right: 1rem;
+    }
+    
+    .list-group-item .text-muted {
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+    
+    .btn-outline-primary {
+        border-radius: 20px;
+        padding: 0.25rem 1rem;
+        font-size: 0.85rem;
+    }
+    
+    .pagination {
+        margin-bottom: 0;
+    }
+    
+    .page-link {
+        color: var(--primary-color);
+        border-radius: 0;
+        margin: 0 2px;
+    }
+    
+    .page-item.active .page-link {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+    
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    }
+    
+    .card-header {
+        background: white;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 1rem 1.5rem;
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+</style>
+{% endblock %} 
