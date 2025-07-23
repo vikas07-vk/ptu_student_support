@@ -39,9 +39,9 @@ os.makedirs('static', exist_ok=True)
 # Email configuration
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_USER = 'miss.vanshika.sharma.10@gmail.com'
-EMAIL_PASS = 'odsjfedptznuinhx'
-ADMIN_EMAILS = ['miss.vanshika.sharma.10@gmail.com', 'vkviki0786@gmail.com']
+EMAIL_USER = 'your@gmail.com'
+EMAIL_PASS = 'your password'
+ADMIN_EMAILS = ['admin1@gmail.com', 'admin2@gmail.com']
 
 # Initialize chatbot data
 df = None
