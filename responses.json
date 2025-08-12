@@ -1,0 +1,9 @@
+{
+    "hello": "Hello! How can I help you today?",
+    "hi": "Hi there! How may I assist you?",
+    "bye": "Goodbye! Have a great day!",
+    "thank you": "You're welcome! Is there anything else I can help you with?",
+    "help": "I can help you with:\n1. Fee structure\n2. Timetables\n3. Syllabus\n4. Latest notices\n5. General information about PTU",
+    "who are you": "I am PTU's student support chatbot. I can help you with information about fees, timetables, syllabus, and latest notices.",
+    "contact": "You can contact PTU at:\nEmail: info@ptu.ac.in\nPhone: +91-XXX-XXXXXXX\nAddress: PTU Campus, XYZ Road"
+} 
