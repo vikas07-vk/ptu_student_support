@@ -26,9 +26,9 @@ app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'static', 'profile_photos')
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'vkviki0786@gmail.com'  # Your Gmail address
+app.config['MAIL_USERNAME'] = '@gmail.com'  # Your Gmail address
 app.config['MAIL_PASSWORD'] =  # User's Gmail app password (no spaces)
-app.config['MAIL_DEFAULT_SENDER'] = 'vkviki0786@gmail.com'
+app.config['MAIL_DEFAULT_SENDER'] = '@gmail.com'
 
 # Set timezone
 timezone = pytz.timezone('Asia/Kolkata')
