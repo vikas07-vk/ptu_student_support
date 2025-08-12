@@ -1,3 +1,0 @@
-[build]
-  command = ""       # No build command
-  publish = "."      # Serve from root folder
