@@ -23,10 +23,10 @@ def load_intents():
                 intents[tag]['responses'].append(response)
             except ValueError:
                 continue
-        return {'intents': list(intents.values())}
+        return list(intents.values())
 
 class ChatBot:
-    def _init_(self, model_prefix='ensemble_model'):
+    def __init__(self, model_prefix='ensemble_model'):
         self.preprocessor = TextPreprocessor()
         self.ensemble = EnsembleClassifier()
         try:
@@ -64,9 +64,9 @@ class ChatBot:
             return "I'm not quite sure about that. Could you please rephrase your question?"
         
         # Get the corresponding intent and response
-        predicted_tag = list(self.intents.keys())[prediction_idx]
-        for intent in self.intents['intents']:
-            if intent['tag'] == predicted_tag:
-                return random.choice(intent['responses'])
+        predicted_tag = self.intents[prediction_idx]['tag']
+           for intent in self.intents:
+           if intent['tag'] == predicted_tag:
+           return random.choice(intent['responses'])
         
         return "I apologize, but I'm having trouble understanding. Could you try asking in a different way?"
