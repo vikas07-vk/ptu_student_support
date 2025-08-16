@@ -15,14 +15,19 @@ from chatbot.chatbot import get_bot_response
 from chatbot.ptu_utils import PTUUtils
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-
 app = Flask(__name__)
-with app.app_context():
-    db.create_all()
+
 app.config['SECRET_KEY'] = 'your-secret-key'
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(basedir, "student_portal.db")}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'static', 'profile_photos')
+
+# Database initialize
+db = SQLAlchemy(app)
+
+# Create tables inside app context
+with app.app_context():
+    db.create_all()
 
 # Set timezone
 timezone = pytz.timezone('Asia/Kolkata')
