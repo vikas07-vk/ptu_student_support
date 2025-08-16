@@ -7,10 +7,10 @@ import logging
 import joblib
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(_name_)
 
 def load_intents():
-    with open('dataset.csv', 'r') as f:
+    with open('data/dataset.csv', 'r') as f:
         # Skip header
         next(f)
         intents = {}
@@ -26,7 +26,7 @@ def load_intents():
         return {'intents': list(intents.values())}
 
 class ChatBot:
-    def __init__(self, model_prefix='ensemble_model'):
+    def _init_(self, model_prefix='ensemble_model'):
         self.preprocessor = TextPreprocessor()
         self.ensemble = EnsembleClassifier()
         try:
@@ -70,23 +70,3 @@ class ChatBot:
                 return random.choice(intent['responses'])
         
         return "I apologize, but I'm having trouble understanding. Could you try asking in a different way?"
-
-def main():
-    chatbot = ChatBot()
-    print("Bot: Hello! I'm your PTU assistant. How can I help you today? (type 'quit' to exit)")
-    
-    while True:
-        user_input = input("You: ")
-        if user_input.lower() in ['quit', 'exit', 'bye']:
-            print("Bot: Goodbye! Have a great day!")
-            break
-            
-        try:
-            response = chatbot.get_response(user_input)
-            print(f"Bot: {response}")
-        except Exception as e:
-            logger.error(f"Error processing input: {e}")
-            print("Bot: I apologize, but I encountered an error. Could you try asking something else?")
-
-if __name__ == "__main__":
-    main() 
