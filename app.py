@@ -16,7 +16,7 @@ from chatbot.ptu_utils import PTUUtils
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-app = Flask(_name_)
+app = Flask(__name__)
 with app.app_context():
     db.create_all()
 app.config['SECRET_KEY'] = 'your-secret-key'
