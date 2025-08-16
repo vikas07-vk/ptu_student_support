@@ -7,7 +7,7 @@ import logging
 import joblib
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(_name_)
+logger = logging.getLogger(__name__)
 
 def load_intents():
     with open('data/dataset.csv', 'r') as f:
