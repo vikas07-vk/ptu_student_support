@@ -560,6 +560,5 @@ def get_chat_history():
     except Exception as e:
         return jsonify({'history': [], 'error': str(e)})
 
-if _name_ == "_main_":
-    port = int(os.environ.get('PORT', 10000))
-    app.run(host='0.0.0.0', port=port)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
