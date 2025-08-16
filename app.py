@@ -13,22 +13,16 @@ import requests
 from bs4 import BeautifulSoup
 from chatbot.chatbot import get_bot_response
 from chatbot.ptu_utils import PTUUtils
-from flask_mail import Mail, Message
-from itsdangerous import URLSafeTimedSerializer
 
-basedir = os.path.abspath(os.path.dirname(__file__))
+basedir = os.path.abspath(os.path.dirname(_file_))
 
-app = Flask(__name__)
+app = Flask(_name_)
+with app.app_context():
+    db.create_all()
 app.config['SECRET_KEY'] = 'your-secret-key'
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(basedir, "student_portal.db")}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'static', 'profile_photos')
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = '@gmail.com'  # Your Gmail address
-app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
-app.config['MAIL_DEFAULT_SENDER'] = '@gmail.com'
 
 # Set timezone
 timezone = pytz.timezone('Asia/Kolkata')
@@ -49,14 +43,9 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
-mail = Mail(app)
-
-# Password reset token serializer
-serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-
 # Models
 class User(UserMixin, db.Model):
-    __tablename__ = 'user'
+    _tablename_ = 'user'
     
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -76,7 +65,7 @@ class User(UserMixin, db.Model):
         return None
 
 class Admin(UserMixin, db.Model):
-    __tablename__ = 'admin'
+    _tablename_ = 'admin'
     
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -85,7 +74,7 @@ class Admin(UserMixin, db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class SupportTicket(db.Model):
-    __tablename__ = 'support_ticket'
+    _tablename_ = 'support_ticket'
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -333,7 +322,7 @@ def upload_profile_photo():
     
     if file and allowed_file(file.filename):
         # Create a unique filename
-        filename = secure_filename(f"{current_user.username}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.{file.filename.rsplit('.', 1)[1].lower()}")
+        filename = secure_filename(f"{current_user.username}{datetime.now().strftime('%Y%m%d%H%M%S')}.{file.filename.rsplit('.', 1)[1].lower()}")
         
         # Delete old profile photo if it exists
         if current_user.profile_photo:
@@ -566,184 +555,6 @@ def get_chat_history():
     except Exception as e:
         return jsonify({'history': [], 'error': str(e)})
 
-@app.route('/clear_chat_history', methods=['POST'])
-@login_required
-def clear_chat_history():
-    try:
-        ChatHistory.query.filter_by(user_id=current_user.id).delete()
-        db.session.commit()
-        return jsonify({'success': True})
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({'success': False, 'error': str(e)})
-
-@app.route('/download/<doc_type>/<course>')
-@login_required
-def download_document(doc_type, course):
-    file_path = ptu_utils.get_pdf_path(doc_type, course)
-    if file_path and os.path.exists(file_path):
-        return send_file(file_path, as_attachment=True)
-    return jsonify({'error': 'File not found'}), 404
-
-@app.route('/get_notices')
-@login_required
-def get_notices():
-    try:
-        notices = ptu_utils.get_notices()
-        return jsonify({'notices': notices})
-    except Exception as e:
-        return jsonify({'notices': [], 'error': str(e)})
-
-@app.route('/send_support_email', methods=['POST'])
-def send_support_email():
-    try:
-        data = request.get_json()
-        name = data.get('name', 'Anonymous')
-        email = data.get('email', 'No email')
-        message = data.get('message', '')
-        subject = data.get('subject', 'PTU Support Request')
-
-        # Email content
-        body = f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
-
-        msg = Message(subject=subject, recipients=['vkviki0786@gmail.com'], body=body)
-        mail.send(msg)
-        return jsonify({'success': True, 'info': 'Support email sent!'})
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)})
-
-@app.route('/live_support', methods=['POST'])
-def live_support():
-    try:
-        # Get JSON data from the request
-        data = request.get_json()
-        name = data.get('name')
-        email = data.get('email')
-        query = data.get('query')
-        
-        # Validate required fields
-        if not all([name, email, query]):
-            return jsonify({
-                'success': False,
-                'message': 'Please fill in all required fields.'
-            })
-        
-        # Create email content
-        subject = f"Live Support Request from {name}"
-        body = f"""
-Live Support Request Details:
---------------------------
-Name: {name}
-Email: {email}
-Query: {query}
-
-This message was sent from the PTU Chatbot live support system.
-        """
-        
-        # Send email to admin
-        msg = Message(subject=subject, recipients=['vkviki0786@gmail.com'], body=body)
-        mail.send(msg)
-        
-        return jsonify({
-            'success': True,
-            'message': 'Your message has been sent successfully! We will contact you soon.'
-        })
-        
-    except Exception as e:
-        print(f"Error in live support: {str(e)}")
-        return jsonify({
-            'success': False,
-            'message': 'An error occurred while sending your message. Please try again.'
-        })
-
-@app.route('/course_materials')
-@login_required
-def course_materials():
-    streams = [
-        "Computer Science Engineering",
-        "Information Technology",
-        "Electronics & Communication Engineering",
-        "Mechanical Engineering",
-        "Civil Engineering",
-        "Electrical Engineering",
-        "Chemical Engineering",
-        "Biotechnology",
-        "Automobile Engineering",
-        "Aerospace Engineering",
-        "Food Technology",
-        "Textile Engineering",
-        "Others"
-    ]
-    return render_template('course_materials.html', streams=streams)
-
-@app.route('/course_materials/<stream>')
-@login_required
-def show_notes(stream):
-    # Dummy notes data; replace with real data as needed
-    notes = [
-        {"title": "Unit 1 Notes", "file": "unit1.pdf"},
-        {"title": "Unit 2 Notes", "file": "unit2.pdf"}
-    ]
-    return render_template('notes.html', stream=stream, notes=notes)
-
-@app.route('/faqs')
-def faqs():
-    return render_template('faqs.html')
-
-@app.route('/forgot_password', methods=['GET', 'POST'])
-def forgot_password():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        user = User.query.filter_by(email=email).first()
-        if user:
-            token = serializer.dumps(user.email, salt='password-reset-salt')
-            reset_url = url_for('reset_password', token=token, _external=True)
-            msg = Message('PTU Student Portal Password Reset', recipients=[user.email])
-            msg.body = f"""
-Hello {user.full_name},
-
-To reset your password, click the link below:
-{reset_url}
-
-If you did not request this, please ignore this email.
-
-Regards,
-PTU Student Support Team
-"""
-            try:
-                mail.send(msg)
-                flash('A password reset link has been sent to your email.', 'success')
-            except Exception as e:
-                flash('Error sending email. Please try again later.', 'danger')
-        else:
-            flash('No account found with that email address.', 'danger')
-        return redirect(url_for('forgot_password'))
-    return render_template('forgot_password.html')
-
-@app.route('/reset_password/<token>', methods=['GET', 'POST'])
-def reset_password(token):
-    try:
-        email = serializer.loads(token, salt='password-reset-salt', max_age=3600)
-    except Exception:
-        flash('The password reset link is invalid or has expired.', 'danger')
-        return redirect(url_for('forgot_password'))
-    user = User.query.filter_by(email=email).first()
-    if not user:
-        flash('Invalid user.', 'danger')
-        return redirect(url_for('forgot_password'))
-    if request.method == 'POST':
-        password = request.form.get('password')
-        confirm = request.form.get('confirm_password')
-        if not password or password != confirm:
-            flash('Passwords do not match.', 'danger')
-            return redirect(request.url)
-        user.password = generate_password_hash(password)
-        db.session.commit()
-        flash('Your password has been reset. You can now log in.', 'success')
-        return redirect(url_for('login'))
-    return render_template('reset_password.html', token=token)
-
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True)
+if _name_ == "_main_":
+    port = int(os.environ.get('PORT', 10000))
+    app.run(host='0.0.0.0', port=port)
