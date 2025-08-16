@@ -193,7 +193,10 @@ def register():
             flash('Error during registration. Please try again.', 'error')
     
     return render_template('register.html')
-
+@app.route("/forgot_password")
+def forgot_password():
+    return "Forgot Password functionality coming soon..."
+    
 @app.route('/dashboard')
 @login_required
 def dashboard():
