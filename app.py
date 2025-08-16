@@ -13,6 +13,8 @@ import requests
 from bs4 import BeautifulSoup
 from chatbot.chatbot import get_bot_response
 from chatbot.ptu_utils import PTUUtils
+from flask_migrate import Migrate
+migrate = Migrate(app, db)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
