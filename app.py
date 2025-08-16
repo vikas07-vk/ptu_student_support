@@ -14,7 +14,7 @@ from bs4 import BeautifulSoup
 from chatbot.chatbot import get_bot_response
 from chatbot.ptu_utils import PTUUtils
 
-basedir = os.path.abspath(os.path.dirname(_file_))
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(_name_)
 with app.app_context():
