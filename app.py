@@ -14,7 +14,7 @@ from bs4 import BeautifulSoup
 from chatbot.chatbot import get_bot_response
 from chatbot.ptu_utils import PTUUtils
 from flask_migrate import Migrate
-migrate = Migrate(app, db)
+from student_portal import models
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
@@ -26,7 +26,7 @@ app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'static', 'profile_photos')
 
 # Database initialize
 db = SQLAlchemy(app)
-
+migrate = Migrate(app, db)
 # Create tables inside app context
 with app.app_context():
     db.create_all()
