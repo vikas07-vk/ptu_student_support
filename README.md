@@ -115,13 +115,14 @@ http://127.0.0.1:5000
 ---
 
 ## Preview
-![ptu front page](https://github.com/user-attachments/assets/47f4a966-eaa0-4615-a4ef-7ddc21afd934)
+![ptu front page](https://github.com/user-attachments/assets/47f4a966-eaa0-4615-a4ef-7ddc21afd934)<br>
 ![photo_2025-08-30_15-03-31](https://github.com/user-attachments/assets/bc4529f8-a668-4393-8261-e101d7330ae8)
+<br>
 ![photo_2025-08-30_15-03-47](https://github.com/user-attachments/assets/ae16a504-53f5-4563-994a-b67360277eaa)
-![photo_2025-08-30_15-03-57](https://github.com/user-attachments/assets/127e5977-58c4-481f-b247-5a6e431115cd)
-![photo_2025-08-30_15-04-08](https://github.com/user-attachments/assets/50fd3900-2b03-4255-a252-c76084a3c7f1)
-<h3>Chatbot</h3>
-![photo_2025-08-30_15-04-04](https://github.com/user-attachments/assets/d70b01a0-7f2a-4e99-8486-0ceeecc34cc8)
+<br>
+![photo_2025-08-30_15-03-57](https://github.com/user-attachments/assets/127e5977-58c4-481f-b247-5a6e431115cd)<br>
+![photo_2025-08-30_15-04-08](https://github.com/user-attachments/assets/50fd3900-2b03-4255-a252-c76084a3c7f1)<br>
+![photo_2025-08-30_15-04-04](https://github.com/user-attachments/assets/d70b01a0-7f2a-4e99-8486-0ceeecc34cc8)<br>
 ![photo_2025-08-30_15-04-01](https://github.com/user-attachments/assets/84457b5e-74e6-4883-9d91-efda0ed30d52)
 
 ---
